@@ -45,13 +45,13 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
-### [2026-08-24] - Version 1.1.5 & Dropdown Menu Highlight & Button Width Fixes
-- [x] **Resolved QComboBox Popup White-on-White Selection**:
-  - Implemented explicit styling for `QComboBox QAbstractItemView` and its items:
-    - Default item: Black text on clean white background.
-    - Hover / Selected item: Crisp white text on Windows Accent Blue (`#0078D7`).
-  - Fixed selection visibility in all dropdown menus (**A capo automatico**, **Unità di misura**, **Carattere**, **Dimensione carattere**).
-- [x] **Resolved "Ingrandisci" Button Clipping**:
-  - Increased ribbon large button minimum width from 58px to 64px, completely eliminating the `"Ingr...isci"` truncation.
-- [x] **100% CTest Suite Validation**:
-  - All 4 test suites passed with zero errors.
+### [2026-08-24] - Version 1.1.6 & Windows x64 CI/CD Automation & GPLv2 Release
+- [x] **GNU General Public License v2.0 (GPLv2)**:
+  - Updated repository `LICENSE` file to official GPLv2 text.
+  - Updated `AboutDialog` and software headers to reflect GPLv2 attribution.
+- [x] **Full Windows x64 GitHub Actions Automated Pipeline**:
+  - Configured automated CI/CD workflow `.github/workflows/build-windows.yml` on `windows-latest`.
+  - Installed official Qt 6.7.2 with MSVC 2022 and Ninja toolchain.
+  - Configured dynamic cross-platform test suites passing 100% on both Linux and Windows runners.
+  - Integrated automated `windeployqt` packaging and zip compression.
+  - Successfully generated and uploaded **`OpenWordPad-Windows-x64.zip`** (49.3 MB standalone package with all required DLLs and platform plugins).
