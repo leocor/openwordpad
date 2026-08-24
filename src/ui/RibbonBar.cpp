@@ -27,12 +27,12 @@ RibbonBar::RibbonBar(QWidget *parent)
         "QToolButton:checked { background: #cce4f7; border: 1px solid #005499; }"
         "QToolButton::menu-button { border: none; border-left: 1px solid rgba(0, 0, 0, 0.15); background: transparent; width: 14px; }"
         "QToolButton::menu-button:hover { background: rgba(0, 120, 215, 0.15); }"
-        "QToolButton::menu-arrow { image: none; width: 0px; height: 0px; border-left: 3px solid transparent; border-right: 3px solid transparent; border-top: 4px solid #333333; }"
+        "QToolButton::menu-arrow { image: url(:/icons/arrow_down.svg); width: 8px; height: 8px; }"
         "QComboBox { border: 1px solid #c0c0c0; border-radius: 2px; padding: 1px 4px; background: #ffffff; color: #000000; font-size: 9pt; height: 22px; }"
         "QComboBox:hover { border: 1px solid #70c0e7; }"
         "QComboBox::drop-down { subcontrol-origin: padding; subcontrol-position: top right; width: 16px; border-left: 1px solid #e0e0e0; background: #f6f6f6; }"
         "QComboBox::drop-down:hover { background: #e5f1fb; }"
-        "QComboBox::down-arrow { image: none; width: 0px; height: 0px; border-left: 3px solid transparent; border-right: 3px solid transparent; border-top: 4px solid #333333; }"
+        "QComboBox::down-arrow { image: url(:/icons/arrow_down.svg); width: 8px; height: 8px; }"
         "QComboBox QAbstractItemView { background-color: #ffffff; color: #000000; selection-background-color: #0078d7; selection-color: #ffffff; border: 1px solid #70c0e7; outline: none; }"
         "QComboBox QAbstractItemView::item { min-height: 22px; padding: 2px 6px; color: #000000; background-color: #ffffff; }"
         "QComboBox QAbstractItemView::item:hover { background-color: #0078d7; color: #ffffff; }"
@@ -146,8 +146,8 @@ void RibbonBar::setupFileMenu() {
 
 void RibbonBar::setupHomeTab() {
     auto homeLayout = new QHBoxLayout(m_homeTab);
-    homeLayout->setContentsMargins(4, 3, 4, 3);
-    homeLayout->setSpacing(4);
+    homeLayout->setContentsMargins(6, 3, 6, 3);
+    homeLayout->setSpacing(6);
 
     // 1. Clipboard Group (Appunti)
     actPaste = new QAction(QIcon(QStringLiteral(":/icons/paste.svg")), QStringLiteral("Incolla"), this);
@@ -160,10 +160,10 @@ void RibbonBar::setupHomeTab() {
 
     auto clipLayout = new QHBoxLayout();
     clipLayout->setContentsMargins(0, 0, 0, 0);
-    clipLayout->setSpacing(3);
+    clipLayout->setSpacing(4);
     
     auto btnPaste = createLargeButton(actPaste, QStringLiteral(":/icons/paste.svg"), QStringLiteral("Incolla"));
-    btnPaste->setFixedSize(58, 66);
+    btnPaste->setFixedSize(64, 66);
     QMenu *pasteMenu = new QMenu(this);
     pasteMenu->addAction(actPaste);
     pasteMenu->addAction(actPasteSpecial);
@@ -181,6 +181,7 @@ void RibbonBar::setupHomeTab() {
     btnCut->setText(QStringLiteral(" Taglia"));
     btnCut->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     btnCut->setFixedHeight(22);
+    btnCut->setMinimumWidth(64);
     btnCut->setStyleSheet("QToolButton { font-size: 8pt; padding: 2px; }");
     clipSmallLayout->addWidget(btnCut);
 
@@ -190,6 +191,7 @@ void RibbonBar::setupHomeTab() {
     btnCopy->setText(QStringLiteral(" Copia"));
     btnCopy->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     btnCopy->setFixedHeight(22);
+    btnCopy->setMinimumWidth(64);
     btnCopy->setStyleSheet("QToolButton { font-size: 8pt; padding: 2px; }");
     clipSmallLayout->addWidget(btnCopy);
 
@@ -370,14 +372,14 @@ void RibbonBar::setupHomeTab() {
     // 4. Insert Group (Inserisci)
     auto insertLayout = new QHBoxLayout();
     insertLayout->setContentsMargins(0, 0, 0, 0);
-    insertLayout->setSpacing(3);
+    insertLayout->setSpacing(4);
 
     actInsertPicture = new QAction(QIcon(QStringLiteral(":/icons/picture.svg")), QStringLiteral("Immagine"), this);
     actChangePicture = new QAction(QIcon(QStringLiteral(":/icons/picture.svg")), QStringLiteral("Cambia immagine"), this);
     actResizePicture = new QAction(QIcon(QStringLiteral(":/icons/picture.svg")), QStringLiteral("Ridimensiona immagine"), this);
 
     auto btnPic = createLargeButton(actInsertPicture, QStringLiteral(":/icons/picture.svg"), QStringLiteral("Immagine"));
-    btnPic->setFixedSize(68, 66);
+    btnPic->setFixedSize(70, 66);
     QMenu *picMenu = new QMenu(this);
     picMenu->addAction(actInsertPicture);
     picMenu->addAction(actChangePicture);
@@ -388,17 +390,17 @@ void RibbonBar::setupHomeTab() {
 
     actPaintDrawing = new QAction(QIcon(QStringLiteral(":/icons/paint.svg")), QStringLiteral("Disegno\ndi Paint"), this);
     auto btnPaint = createLargeButton(actPaintDrawing, QStringLiteral(":/icons/paint.svg"), QStringLiteral("Disegno\ndi Paint"));
-    btnPaint->setFixedSize(68, 66);
+    btnPaint->setFixedSize(74, 66);
     insertLayout->addWidget(btnPaint);
 
     actDateTime = new QAction(QIcon(QStringLiteral(":/icons/datetime.svg")), QStringLiteral("Data\ne ora"), this);
     auto btnDate = createLargeButton(actDateTime, QStringLiteral(":/icons/datetime.svg"), QStringLiteral("Data\ne ora"));
-    btnDate->setFixedSize(66, 66);
+    btnDate->setFixedSize(68, 66);
     insertLayout->addWidget(btnDate);
 
     actInsertObject = new QAction(QIcon(QStringLiteral(":/icons/object.svg")), QStringLiteral("Inserisci\noggetto"), this);
     auto btnObj = createLargeButton(actInsertObject, QStringLiteral(":/icons/object.svg"), QStringLiteral("Inserisci\noggetto"));
-    btnObj->setFixedSize(68, 66);
+    btnObj->setFixedSize(74, 66);
     insertLayout->addWidget(btnObj);
 
     homeLayout->addWidget(createRibbonGroup(QStringLiteral("Inserisci"), insertLayout));
@@ -502,8 +504,8 @@ void RibbonBar::setupViewTab() {
 QWidget *RibbonBar::createRibbonGroup(const QString &title, QLayout *contentLayout) {
     auto groupWidget = new QWidget(this);
     auto vLayout = new QVBoxLayout(groupWidget);
-    vLayout->setContentsMargins(4, 2, 4, 1);
-    vLayout->setSpacing(1);
+    vLayout->setContentsMargins(6, 2, 6, 2);
+    vLayout->setSpacing(2);
 
     auto contentWidget = new QWidget(groupWidget);
     contentWidget->setLayout(contentLayout);
@@ -511,7 +513,7 @@ QWidget *RibbonBar::createRibbonGroup(const QString &title, QLayout *contentLayo
 
     auto lblTitle = new QLabel(title, groupWidget);
     lblTitle->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    lblTitle->setFixedHeight(14);
+    lblTitle->setFixedHeight(15);
     lblTitle->setStyleSheet("color: #717171; font-size: 8pt; font-family: 'Segoe UI', 'DejaVu Sans', sans-serif; font-weight: normal; margin: 0; padding: 0; border: none;");
     vLayout->addWidget(lblTitle, 0);
 
@@ -526,7 +528,7 @@ QToolButton *RibbonBar::createLargeButton(QAction *action, const QString &iconPa
     btn->setIconSize(QSize(32, 32));
     btn->setText(text);
     btn->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    btn->setMinimumWidth(64);
+    btn->setMinimumWidth(66);
     btn->setFixedHeight(66);
     btn->setStyleSheet("QToolButton { font-size: 8pt; padding: 2px 2px; }");
     return btn;

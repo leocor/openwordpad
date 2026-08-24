@@ -45,16 +45,13 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
-### [2026-08-24] - Version 1.1.7 & Windows UI Visual Polishing
-- [x] **Resolved Split Button Black Rectangle on Windows**:
-  - Explicitly styled `QToolButton::menu-button` and `QToolButton::menu-arrow` with clean transparent borders, hover backgrounds, and pure CSS vector arrows.
-  - Eliminated the solid black block next to **Incolla** and **Immagine**.
-- [x] **Resolved QComboBox Popup Item Visibility**:
-  - Bound explicit `QListView` views to `cbFontFamily`, `cbFontSize`, `cbWordWrap`, and `cbUnits`.
-  - Added dedicated styling for `QComboBox::drop-down` and `QComboBox::down-arrow`.
-  - Fully resolved white-on-white text rendering in font sizes and family dropdowns on Windows.
-- [x] **Eliminated Vertical Overlap in Ribbon Groups**:
-  - Adjusted RibbonBar height to 154px and unified button heights to 66px.
-  - Centered group labels with dedicated spacing, completely preventing overlap with button text.
+### [2026-08-24] - Version 1.1.8 & Vector Downward Chevron Arrows & Ribbon Padding Polish
+- [x] **Replaced CSS borders with Crisp Vector SVG Arrows**:
+  - Created `resources/icons/arrow_down.svg` with native Windows-style downward chevron.
+  - Bound `arrow_down.svg` to `QToolButton::menu-arrow` and `QComboBox::down-arrow`.
+  - Replaced the black square artifact with authentic downward arrow chevrons on all split buttons and dropdown menus.
+- [x] **Generous Horizontal & Vertical Ribbon Button Padding**:
+  - Increased button widths (`Incolla`: 64px, `Immagine`: 70px, `Disegno di Paint`: 74px, `Data e ora`: 68px, `Inserisci oggetto`: 74px).
+  - Increased group margins to 6px and spacing to 6px, completely preventing button labels and group titles from overflowing into adjacent elements or border separators.
 - [x] **100% CTest Suite Validation**:
   - All 4 test suites passed with zero errors.

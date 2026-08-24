@@ -51,5 +51,6 @@
         <file>icons/statusbar.svg</file>
         <file>icons/wordwrap.svg</file>
         <file>icons/units.svg</file>
+        <file>icons/arrow_down.svg</file>
     </qresource>
 </RCC>
