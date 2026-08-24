@@ -102,33 +102,30 @@ jobs:
 
       - name: Package Linux Standalone AppImage & Bundle
         run: |
-          # Download linuxdeploy and plugins
-          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -O linuxdeploy
-          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage -O linuxdeploy-plugin-qt
-          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage -O linuxdeploy-plugin-appimage
-          chmod +x linuxdeploy*
+          # Download linuxdeploy and appimagetool
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -O linuxdeploy.AppImage
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool.AppImage
+          chmod +x linuxdeploy.AppImage appimagetool.AppImage
 
-          ./linuxdeploy --appimage-extract > /dev/null 2>&1
-          mv squashfs-root linuxdeploy-root
-          ./linuxdeploy-plugin-qt --appimage-extract > /dev/null 2>&1
-          mv squashfs-root linuxdeploy-plugin-qt-root
-          ./linuxdeploy-plugin-appimage --appimage-extract > /dev/null 2>&1
-          mv squashfs-root linuxdeploy-plugin-appimage-root
-
-          export PATH="$(pwd)/linuxdeploy-root/usr/bin:$(pwd)/linuxdeploy-plugin-qt-root/usr/bin:$(pwd)/linuxdeploy-plugin-appimage-root/usr/bin:$PATH"
+          # Extract linuxdeploy to run headless without FUSE
+          ./linuxdeploy.AppImage --appimage-extract > /dev/null 2>&1
+          
+          export PATH="$(pwd)/squashfs-root/usr/bin:$PATH"
           export QMAKE=/usr/lib/qt6/bin/qmake
           export EXTRA_QT_PLUGINS="svg,imageformats,platforms,iconengines"
 
-          linuxdeploy --appdir AppDir \
+          # Deploy all binaries, libraries, desktop and icon into AppDir
+          ./squashfs-root/usr/bin/linuxdeploy --appdir AppDir \
             -e build/openwordpad \
             -d openwordpad.desktop \
             -i resources/icons/app_icon.png \
-            --plugin qt \
-            --output appimage
+            --plugin qt
 
-          # Rename AppImage and create tar.gz bundle
-          mv OpenWordPad*.AppImage OpenWordPad-Linux-x86_64.AppImage
+          # Package AppDir into standalone AppImage using appimagetool
+          ARCH=x86_64 ./appimagetool.AppImage --appimage-extract-and-run AppDir OpenWordPad-Linux-x86_64.AppImage
           chmod +x OpenWordPad-Linux-x86_64.AppImage
+
+          # Also create a tar.gz bundle containing the AppImage and metadata
           tar -czvf OpenWordPad-Linux-x86_64.tar.gz OpenWordPad-Linux-x86_64.AppImage openwordpad.desktop README.md LICENSE
 
       - name: Upload Linux Artifact
