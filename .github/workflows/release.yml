@@ -102,30 +102,40 @@ jobs:
 
       - name: Package Linux Standalone AppImage & Bundle
         run: |
-          # Download linuxdeploy and appimagetool
-          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -O linuxdeploy.AppImage
+          # 1. Create AppDir structure
+          mkdir -p AppDir/usr/bin AppDir/usr/lib AppDir/usr/plugins AppDir/usr/share/icons/hicolor/scalable/apps
+          cp build/openwordpad AppDir/usr/bin/
+          cp openwordpad.desktop AppDir/
+          cp resources/icons/app_icon.svg AppDir/usr/share/icons/hicolor/scalable/apps/openwordpad.svg
+          cp resources/icons/app_icon.png AppDir/openwordpad.png
+
+          # 2. Copy Qt6 and runtime dependencies into AppDir
+          find /usr/lib -name "libQt6*.so*" 2>/dev/null | xargs -I {} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
+          find /usr/lib -name "libicu*.so*" 2>/dev/null | xargs -I {} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
+          find /usr/lib -name "libxkbcommon*.so*" 2>/dev/null | xargs -I {} cp -a {} AppDir/usr/lib/ 2>/dev/null || true
+
+          # 3. Copy Qt6 plugins
+          cp -r /usr/lib/x86_64-linux-gnu/qt6/plugins/* AppDir/usr/plugins/ 2>/dev/null || true
+
+          # 4. Create AppRun script
+          cat << 'EOF' > AppDir/AppRun
+#!/bin/bash
+HERE="$(dirname "$(readlink -f "${0}")")"
+export PATH="${HERE}/usr/bin:${PATH}"
+export LD_LIBRARY_PATH="${HERE}/usr/lib:${LD_LIBRARY_PATH}"
+export QT_PLUGIN_PATH="${HERE}/usr/plugins"
+export QML2_IMPORT_PATH="${HERE}/usr/qml"
+exec "${HERE}/usr/bin/openwordpad" "$@"
+EOF
+          chmod +x AppDir/AppRun
+
+          # 5. Download appimagetool and generate standalone AppImage
           wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool.AppImage
-          chmod +x linuxdeploy.AppImage appimagetool.AppImage
-
-          # Extract linuxdeploy to run headless without FUSE
-          ./linuxdeploy.AppImage --appimage-extract > /dev/null 2>&1
-          
-          export PATH="$(pwd)/squashfs-root/usr/bin:$PATH"
-          export QMAKE=/usr/lib/qt6/bin/qmake
-          export EXTRA_QT_PLUGINS="svg,imageformats,platforms,iconengines"
-
-          # Deploy all binaries, libraries, desktop and icon into AppDir
-          ./squashfs-root/usr/bin/linuxdeploy --appdir AppDir \
-            -e build/openwordpad \
-            -d openwordpad.desktop \
-            -i resources/icons/app_icon.png \
-            --plugin qt
-
-          # Package AppDir into standalone AppImage using appimagetool
+          chmod +x appimagetool.AppImage
           ARCH=x86_64 ./appimagetool.AppImage --appimage-extract-and-run AppDir OpenWordPad-Linux-x86_64.AppImage
           chmod +x OpenWordPad-Linux-x86_64.AppImage
 
-          # Also create a tar.gz bundle containing the AppImage and metadata
+          # 6. Create tar.gz bundle containing the AppImage and metadata
           tar -czvf OpenWordPad-Linux-x86_64.tar.gz OpenWordPad-Linux-x86_64.AppImage openwordpad.desktop README.md LICENSE
 
       - name: Upload Linux Artifact
