@@ -68,8 +68,14 @@ ninja -C build
 - [Requirements Specification (requirements.md / requirements.ms)](requirements.md)
 - [Development Log (log.md)](log.md)
 
----
+## ⚖️ License & Trademark Disclaimer
 
-## ⚖️ License
-OpenWordPad is free software licensed under the [GNU General Public License v3 (GPLv3)](LICENSE).  
+### License
+OpenWordPad is free software licensed under the **[GNU General Public License v2.0 (GPLv2)](LICENSE)**.  
 Copyright (C) 2026 Leonardo Corato.
+
+### Trademark & Fair Use Disclaimer
+* **WordPad**, **Microsoft Word**, and **Windows** are registered trademarks of **Microsoft Corporation** in the United States and other countries.
+* **OpenWordPad** is an independent, clean-room open-source project created from scratch using open document specifications (RTF Specification, ISO/IEC 29500 DOCX, OASIS ODT) and standard open-source libraries (C++20, Qt6).
+* OpenWordPad is **not affiliated with, endorsed by, sponsored by, or associated with Microsoft Corporation** in any way.
+* All graphical assets and icons in this repository are original vector creations licensed under GPLv2.

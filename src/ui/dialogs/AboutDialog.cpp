@@ -48,13 +48,11 @@ AboutDialog::AboutDialog(QWidget *parent)
     auto infoText = new QLabel(this);
     infoText->setWordWrap(true);
     infoText->setText(
-        QStringLiteral("<p>A faithful, high-performance recreation of Microsoft WordPad built with modern C++20 and Qt6.</p>"
+        QStringLiteral("<p>A faithful, high-performance, clean-room recreation of Microsoft WordPad built with modern C++20 and Qt6.</p>"
                        "<p><b>License:</b> GNU General Public License v2.0 (GPLv2)<br>"
                        "<b>Author:</b> Leonardo Corato</p>"
-                       "<p>This software is free and open source. You may copy, modify, and distribute it under the terms of the GNU GPLv2.</p>")
-            .arg(QSysInfo::prettyProductName())
-            .arg(QSysInfo::currentCpuArchitecture())
-            .arg(qVersion())
+                       "<p>This software is free and open source. You may copy, modify, and distribute it under the terms of the GNU GPLv2.</p>"
+                       "<p><small style='color: #666;'><b>Disclaimer:</b> Microsoft, WordPad, and Windows are registered trademarks of Microsoft Corporation. OpenWordPad is an independent open-source project and is not affiliated with, endorsed by, or sponsored by Microsoft Corporation.</small></p>")
     );
     mainLayout->addWidget(infoText);
 
