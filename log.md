@@ -45,13 +45,16 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
-### [2026-08-24] - Version 1.1.6 & Windows x64 CI/CD Automation & GPLv2 Release
-- [x] **GNU General Public License v2.0 (GPLv2)**:
-  - Updated repository `LICENSE` file to official GPLv2 text.
-  - Updated `AboutDialog` and software headers to reflect GPLv2 attribution.
-- [x] **Full Windows x64 GitHub Actions Automated Pipeline**:
-  - Configured automated CI/CD workflow `.github/workflows/build-windows.yml` on `windows-latest`.
-  - Installed official Qt 6.7.2 with MSVC 2022 and Ninja toolchain.
-  - Configured dynamic cross-platform test suites passing 100% on both Linux and Windows runners.
-  - Integrated automated `windeployqt` packaging and zip compression.
-  - Successfully generated and uploaded **`OpenWordPad-Windows-x64.zip`** (49.3 MB standalone package with all required DLLs and platform plugins).
+### [2026-08-24] - Version 1.1.7 & Windows UI Visual Polishing
+- [x] **Resolved Split Button Black Rectangle on Windows**:
+  - Explicitly styled `QToolButton::menu-button` and `QToolButton::menu-arrow` with clean transparent borders, hover backgrounds, and pure CSS vector arrows.
+  - Eliminated the solid black block next to **Incolla** and **Immagine**.
+- [x] **Resolved QComboBox Popup Item Visibility**:
+  - Bound explicit `QListView` views to `cbFontFamily`, `cbFontSize`, `cbWordWrap`, and `cbUnits`.
+  - Added dedicated styling for `QComboBox::drop-down` and `QComboBox::down-arrow`.
+  - Fully resolved white-on-white text rendering in font sizes and family dropdowns on Windows.
+- [x] **Eliminated Vertical Overlap in Ribbon Groups**:
+  - Adjusted RibbonBar height to 154px and unified button heights to 66px.
+  - Centered group labels with dedicated spacing, completely preventing overlap with button text.
+- [x] **100% CTest Suite Validation**:
+  - All 4 test suites passed with zero errors.
