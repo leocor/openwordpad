@@ -9,7 +9,11 @@ int main(int argc, char *argv[]) {
     app.setOrganizationName(QStringLiteral("LeonardoCorato"));
     app.setOrganizationDomain(QStringLiteral("github.com/leocorato"));
     app.setApplicationName(QStringLiteral("OpenWordPad"));
-    app.setApplicationVersion(QStringLiteral("1.0.0"));
+#ifdef OPENWORDPAD_VERSION
+    app.setApplicationVersion(QStringLiteral(OPENWORDPAD_VERSION));
+#else
+    app.setApplicationVersion(QStringLiteral("1.2.0"));
+#endif
 
     // Modern clean style
     app.setStyle(QStyleFactory::create(QStringLiteral("Fusion")));

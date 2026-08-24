@@ -1,4 +1,5 @@
 #include "AboutDialog.h"
+#include <QCoreApplication>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -28,7 +29,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 
     auto titleLayout = new QVBoxLayout();
     auto appTitle = new QLabel(QStringLiteral("<b><font size='+2'>OpenWordPad</font></b>"), this);
-    auto verLabel = new QLabel(QStringLiteral("Version 1.1.0 (Qt6 C++ Build)"), this);
+    auto verLabel = new QLabel(QStringLiteral("Version %1 (Qt6 C++ Build)").arg(QCoreApplication::applicationVersion().isEmpty() ? QStringLiteral("1.2.0") : QCoreApplication::applicationVersion()), this);
     auto authorLabel = new QLabel(QStringLiteral("Author: <b>Leonardo Corato</b>"), this);
     
     titleLayout->addWidget(appTitle);

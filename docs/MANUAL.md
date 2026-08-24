@@ -1,8 +1,8 @@
 # OpenWordPad - User Manual & Technical Documentation
 
 **Author**: Leonardo Corato  
-**License**: GNU General Public License v3 (GPLv3)  
-**Version**: 1.0.0  
+**License**: GNU General Public License v2.0 (GPLv2)  
+**Version**: 1.2.0  
 
 ---
 

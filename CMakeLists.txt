@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
-project(OpenWordPad VERSION 1.1.0 LANGUAGES C CXX)
+project(OpenWordPad VERSION 1.2.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+
+add_compile_definitions(OPENWORDPAD_VERSION="${PROJECT_VERSION}")
 
 find_package(Qt6 REQUIRED COMPONENTS
     Core

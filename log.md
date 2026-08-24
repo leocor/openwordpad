@@ -45,9 +45,11 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
-### [2026-08-24] - Version 1.1.9 & Immagine Split Button Layout Tuning
-- [x] **Eliminated Immagine Split Button Divider Overlap**:
-  - Expanded `Immagine` split button width from 70px to 82px, ensuring ample 8px horizontal padding between the word "Immagine" and the vertical dropdown separator.
-  - Expanded `Incolla` to 68px, `Disegno di Paint` to 76px, and `Inserisci oggetto` to 78px for generous spacing across all DPI scalings.
+### [2026-08-24] - Version 1.2.0 - Centralized Dynamic Versioning & Full License/Doc Sync
+- [x] **Dynamic Single-Source-of-Truth Versioning**:
+  - Configured `CMakeLists.txt` with `project(OpenWordPad VERSION 1.2.0)` and passed `OPENWORDPAD_VERSION` compile definition.
+  - Linked `AboutDialog` and `QApplication::applicationVersion()` to dynamically read the application version at runtime, completely eliminating version desynchronization.
+- [x] **Complete Documentation & License Synchronization**:
+  - Synchronized `docs/MANUAL.md`, `README.md`, `requirements.md`, and `AboutDialog` to **Version 1.2.0** and **GNU GPLv2**.
 - [x] **100% CTest Suite Validation**:
   - All 4 test suites passed with zero errors.
