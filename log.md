@@ -45,6 +45,14 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
+### [2026-08-24] - Version 1.3.0 - Full Multilingual Internationalization (22 Languages)
+- [x] **Native 22-Language Internationalization (i18n)**:
+  - Integrated `TranslationManager` with automatic system locale detection (`QLocale::system()`) and persistent user preference in `QSettings`.
+  - Added full built-in dictionaries for 22 languages: 🇮🇹 Italiano, 🇬🇧 English, 🇪🇸 Español, 🇫🇷 Français, 🇩🇪 Deutsch, 🇵🇹 Português, 🇷🇺 Русский, 🇨🇳 简体中文, 🇹🇼 繁體中文, 🇯🇵 日本語, 🇰🇷 한국어, 🇸🇦 العربية, 🇮🇳 हिन्दी, 🇳🇱 Nederlands, 🇵🇱 Polski, 🇹🇷 Türkçe, 🇸🇪 Svenska, 🇬🇷 Ελληνικά, 🇨🇿 Čeština, 🇭🇺 Magyar, 🇺🇦 Українська, 🇮🇩 Bahasa Indonesia.
+  - Added dynamic Language selector in the View tab under Settings with instant live retranslation (`retranslateUi()`).
+- [x] **100% CTest Suite Validation**:
+  - Added `TranslationTests` verifying 22 languages load cleanly without error. All 5 test suites pass 100%.
+
 ### [2026-08-24] - Version 1.2.3 - View Tab 100% Zoom Button Padding Polish
 - [x] **Eliminated 100% Zoom Button Label Border Clipping**:
   - Expanded `100%`, `Ingrandisci`, and `Riduci` buttons in the View tab to fixed size `68x66px`.

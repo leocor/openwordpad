@@ -1,4 +1,5 @@
 #include "RibbonBar.h"
+#include "../core/TranslationManager.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
@@ -8,11 +9,36 @@
 #include <QActionGroup>
 #include <QFileInfo>
 #include <QListView>
+#include <QFontDatabase>
 
 namespace OpenWordPad {
 
 RibbonBar::RibbonBar(QWidget *parent)
     : QWidget(parent)
+    , m_lblWordWrap(nullptr)
+    , m_lblUnits(nullptr)
+    , m_lblLanguage(nullptr)
+    , m_lblGroupClipboard(nullptr)
+    , m_lblGroupFont(nullptr)
+    , m_lblGroupPara(nullptr)
+    , m_lblGroupInsert(nullptr)
+    , m_lblGroupEdit(nullptr)
+    , m_lblGroupZoom(nullptr)
+    , m_lblGroupShowHide(nullptr)
+    , m_lblGroupSettings(nullptr)
+    , m_btnPaste(nullptr)
+    , m_btnCut(nullptr)
+    , m_btnCopy(nullptr)
+    , m_btnPic(nullptr)
+    , m_btnPaint(nullptr)
+    , m_btnDate(nullptr)
+    , m_btnObj(nullptr)
+    , m_btnFind(nullptr)
+    , m_btnReplace(nullptr)
+    , m_btnSelectAll(nullptr)
+    , m_btnZoomIn(nullptr)
+    , m_btnZoomOut(nullptr)
+    , m_btnZoom100(nullptr)
 {
     setFixedHeight(154);
     setStyleSheet(
@@ -53,7 +79,7 @@ RibbonBar::RibbonBar(QWidget *parent)
 
     // File Application Menu Button (Blue styling)
     m_btnFile = new QToolButton(topBar);
-    m_btnFile->setText(QStringLiteral("  File  "));
+    m_btnFile->setText(QStringLiteral("  ") + tr("File") + QStringLiteral("  "));
     m_btnFile->setPopupMode(QToolButton::InstantPopup);
     m_btnFile->setStyleSheet(
         "QToolButton { background: #1976d2; color: white; font-weight: bold; border-radius: 2px; padding: 4px 14px; }"
@@ -71,8 +97,8 @@ RibbonBar::RibbonBar(QWidget *parent)
     m_homeTab = new QWidget(m_tabWidget);
     m_viewTab = new QWidget(m_tabWidget);
 
-    m_tabWidget->addTab(m_homeTab, QStringLiteral("Home"));
-    m_tabWidget->addTab(m_viewTab, QStringLiteral("Visualizza"));
+    m_tabWidget->addTab(m_homeTab, tr("Home"));
+    m_tabWidget->addTab(m_viewTab, tr("View"));
 
     setupFileMenu();
     setupHomeTab();
@@ -82,64 +108,64 @@ RibbonBar::RibbonBar(QWidget *parent)
 }
 
 void RibbonBar::setupQAT(QHBoxLayout *topBarLayout) {
-    actSave = new QAction(QIcon(QStringLiteral(":/icons/save.svg")), QStringLiteral("Salva"), this);
+    actSave = new QAction(QIcon(QStringLiteral(":/icons/save.svg")), tr("Save"), this);
     actSave->setShortcut(QKeySequence::Save);
-    actSave->setToolTip(QStringLiteral("Salva (Ctrl+S)"));
+    actSave->setToolTip(tr("Save") + QStringLiteral(" (Ctrl+S)"));
 
-    actUndo = new QAction(QIcon(QStringLiteral(":/icons/undo.svg")), QStringLiteral("Annulla"), this);
+    actUndo = new QAction(QIcon(QStringLiteral(":/icons/undo.svg")), QStringLiteral("Undo"), this);
     actUndo->setShortcut(QKeySequence::Undo);
-    actUndo->setToolTip(QStringLiteral("Annulla (Ctrl+Z)"));
+    actUndo->setToolTip(QStringLiteral("Undo (Ctrl+Z)"));
 
-    actRedo = new QAction(QIcon(QStringLiteral(":/icons/redo.svg")), QStringLiteral("Ripristina"), this);
+    actRedo = new QAction(QIcon(QStringLiteral(":/icons/redo.svg")), QStringLiteral("Redo"), this);
     actRedo->setShortcut(QKeySequence::Redo);
-    actRedo->setToolTip(QStringLiteral("Ripristina (Ctrl+Y)"));
+    actRedo->setToolTip(QStringLiteral("Redo (Ctrl+Y)"));
 
-    actQuickPrint = new QAction(QIcon(QStringLiteral(":/icons/quick_print.svg")), QStringLiteral("Stampa rapida"), this);
-    actQuickPrint->setToolTip(QStringLiteral("Stampa rapida"));
+    actQuickPrint = new QAction(QIcon(QStringLiteral(":/icons/quick_print.svg")), tr("Quick Print"), this);
+    actQuickPrint->setToolTip(tr("Quick Print"));
 
-    actPrintPreview = new QAction(QIcon(QStringLiteral(":/icons/print_preview.svg")), QStringLiteral("Anteprima di stampa"), this);
-    actPrintPreview->setToolTip(QStringLiteral("Anteprima di stampa"));
+    actPrintPreview = new QAction(QIcon(QStringLiteral(":/icons/print_preview.svg")), tr("Print Preview"), this);
+    actPrintPreview->setToolTip(tr("Print Preview"));
 
-    topBarLayout->addWidget(createSmallButton(actSave, QStringLiteral(":/icons/save.svg"), QStringLiteral("Salva (Ctrl+S)")));
-    topBarLayout->addWidget(createSmallButton(actUndo, QStringLiteral(":/icons/undo.svg"), QStringLiteral("Annulla (Ctrl+Z)")));
-    topBarLayout->addWidget(createSmallButton(actRedo, QStringLiteral(":/icons/redo.svg"), QStringLiteral("Ripristina (Ctrl+Y)")));
+    topBarLayout->addWidget(createSmallButton(actSave, QStringLiteral(":/icons/save.svg"), tr("Save") + QStringLiteral(" (Ctrl+S)")));
+    topBarLayout->addWidget(createSmallButton(actUndo, QStringLiteral(":/icons/undo.svg"), QStringLiteral("Undo (Ctrl+Z)")));
+    topBarLayout->addWidget(createSmallButton(actRedo, QStringLiteral(":/icons/redo.svg"), QStringLiteral("Redo (Ctrl+Y)")));
 }
 
 void RibbonBar::setupFileMenu() {
     m_fileMenu = new QMenu(this);
 
-    actNew = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/new.svg")), QStringLiteral("Nuovo"));
+    actNew = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/new.svg")), tr("New"));
     actNew->setShortcut(QKeySequence::New);
 
-    actOpen = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/open.svg")), QStringLiteral("Apri..."));
+    actOpen = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/open.svg")), tr("Open..."));
     actOpen->setShortcut(QKeySequence::Open);
 
     m_fileMenu->addAction(actSave);
 
     // Save As Submenu
-    QMenu *saveAsMenu = m_fileMenu->addMenu(QIcon(QStringLiteral(":/icons/save_as.svg")), QStringLiteral("Salva con nome"));
-    actSaveAsRtf = saveAsMenu->addAction(QStringLiteral("Documento RTF (*.rtf)"));
-    actSaveAsDocx = saveAsMenu->addAction(QStringLiteral("Documento Office Open XML (*.docx)"));
-    actSaveAsOdt = saveAsMenu->addAction(QStringLiteral("Documento OpenDocument (*.odt)"));
-    actSaveAsTxt = saveAsMenu->addAction(QStringLiteral("Documento di testo normale (*.txt)"));
-    actSaveAsOther = saveAsMenu->addAction(QStringLiteral("Altri formati (HTML, PDF)..."));
+    QMenu *saveAsMenu = m_fileMenu->addMenu(QIcon(QStringLiteral(":/icons/save_as.svg")), tr("Save As..."));
+    actSaveAsRtf = saveAsMenu->addAction(QStringLiteral("Rich Text Document (*.rtf)"));
+    actSaveAsDocx = saveAsMenu->addAction(QStringLiteral("Office Open XML Document (*.docx)"));
+    actSaveAsOdt = saveAsMenu->addAction(QStringLiteral("OpenDocument Text (*.odt)"));
+    actSaveAsTxt = saveAsMenu->addAction(QStringLiteral("Plain Text Document (*.txt)"));
+    actSaveAsOther = saveAsMenu->addAction(QStringLiteral("Other formats (HTML, PDF)..."));
 
     // Print Submenu
-    QMenu *printMenu = m_fileMenu->addMenu(QIcon(QStringLiteral(":/icons/print.svg")), QStringLiteral("Stampa"));
-    actPrint = printMenu->addAction(QIcon(QStringLiteral(":/icons/print.svg")), QStringLiteral("Stampa..."));
+    QMenu *printMenu = m_fileMenu->addMenu(QIcon(QStringLiteral(":/icons/print.svg")), tr("Print..."));
+    actPrint = printMenu->addAction(QIcon(QStringLiteral(":/icons/print.svg")), tr("Print..."));
     actPrint->setShortcut(QKeySequence::Print);
     printMenu->addAction(actQuickPrint);
     printMenu->addAction(actPrintPreview);
 
-    actPageSetup = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/page_setup.svg")), QStringLiteral("Imposta pagina"));
-    actEmail = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/email.svg")), QStringLiteral("Invia come messaggio di posta elettronica"));
+    actPageSetup = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/page_setup.svg")), tr("Page Setup..."));
+    actEmail = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/email.svg")), tr("Send in email"));
     
     m_fileMenu->addSeparator();
-    m_recentMenu = m_fileMenu->addMenu(QStringLiteral("Documenti recenti"));
+    m_recentMenu = m_fileMenu->addMenu(QStringLiteral("Recent documents"));
     
     m_fileMenu->addSeparator();
-    actAbout = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/about.svg")), QStringLiteral("Informazioni su WordPad"));
-    actExit = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/exit.svg")), QStringLiteral("Esci"));
+    actAbout = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/about.svg")), tr("About WordPad"));
+    actExit = m_fileMenu->addAction(QIcon(QStringLiteral(":/icons/exit.svg")), tr("Exit"));
 
     m_btnFile->setMenu(m_fileMenu);
 }
@@ -149,56 +175,56 @@ void RibbonBar::setupHomeTab() {
     homeLayout->setContentsMargins(6, 3, 6, 3);
     homeLayout->setSpacing(6);
 
-    // 1. Clipboard Group (Appunti)
-    actPaste = new QAction(QIcon(QStringLiteral(":/icons/paste.svg")), QStringLiteral("Incolla"), this);
+    // 1. Clipboard Group
+    actPaste = new QAction(QIcon(QStringLiteral(":/icons/paste.svg")), tr("Paste"), this);
     actPaste->setShortcut(QKeySequence::Paste);
-    actPasteSpecial = new QAction(QIcon(QStringLiteral(":/icons/paste.svg")), QStringLiteral("Incolla speciale..."), this);
-    actCut = new QAction(QIcon(QStringLiteral(":/icons/cut.svg")), QStringLiteral("Taglia"), this);
+    actPasteSpecial = new QAction(QIcon(QStringLiteral(":/icons/paste.svg")), tr("Paste Special..."), this);
+    actCut = new QAction(QIcon(QStringLiteral(":/icons/cut.svg")), tr("Cut"), this);
     actCut->setShortcut(QKeySequence::Cut);
-    actCopy = new QAction(QIcon(QStringLiteral(":/icons/copy.svg")), QStringLiteral("Copia"), this);
+    actCopy = new QAction(QIcon(QStringLiteral(":/icons/copy.svg")), tr("Copy"), this);
     actCopy->setShortcut(QKeySequence::Copy);
 
     auto clipLayout = new QHBoxLayout();
     clipLayout->setContentsMargins(0, 0, 0, 0);
     clipLayout->setSpacing(4);
     
-    auto btnPaste = createLargeButton(actPaste, QStringLiteral(":/icons/paste.svg"), QStringLiteral("Incolla"));
-    btnPaste->setFixedSize(68, 66);
+    m_btnPaste = createLargeButton(actPaste, QStringLiteral(":/icons/paste.svg"), tr("Paste"));
+    m_btnPaste->setFixedSize(68, 66);
     QMenu *pasteMenu = new QMenu(this);
     pasteMenu->addAction(actPaste);
     pasteMenu->addAction(actPasteSpecial);
-    btnPaste->setMenu(pasteMenu);
-    btnPaste->setPopupMode(QToolButton::MenuButtonPopup);
-    clipLayout->addWidget(btnPaste);
+    m_btnPaste->setMenu(pasteMenu);
+    m_btnPaste->setPopupMode(QToolButton::MenuButtonPopup);
+    clipLayout->addWidget(m_btnPaste);
 
     auto clipSmallLayout = new QVBoxLayout();
     clipSmallLayout->setContentsMargins(0, 2, 0, 2);
     clipSmallLayout->setSpacing(3);
 
-    auto btnCut = new QToolButton(this);
-    btnCut->setDefaultAction(actCut);
-    btnCut->setIcon(QIcon(QStringLiteral(":/icons/cut.svg")));
-    btnCut->setText(QStringLiteral(" Taglia"));
-    btnCut->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    btnCut->setFixedHeight(22);
-    btnCut->setMinimumWidth(64);
-    btnCut->setStyleSheet("QToolButton { font-size: 8pt; padding: 2px; }");
-    clipSmallLayout->addWidget(btnCut);
+    m_btnCut = new QToolButton(this);
+    m_btnCut->setDefaultAction(actCut);
+    m_btnCut->setIcon(QIcon(QStringLiteral(":/icons/cut.svg")));
+    m_btnCut->setText(QStringLiteral(" ") + tr("Cut"));
+    m_btnCut->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    m_btnCut->setFixedHeight(22);
+    m_btnCut->setMinimumWidth(64);
+    m_btnCut->setStyleSheet("QToolButton { font-size: 8pt; padding: 2px; }");
+    clipSmallLayout->addWidget(m_btnCut);
 
-    auto btnCopy = new QToolButton(this);
-    btnCopy->setDefaultAction(actCopy);
-    btnCopy->setIcon(QIcon(QStringLiteral(":/icons/copy.svg")));
-    btnCopy->setText(QStringLiteral(" Copia"));
-    btnCopy->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    btnCopy->setFixedHeight(22);
-    btnCopy->setMinimumWidth(64);
-    btnCopy->setStyleSheet("QToolButton { font-size: 8pt; padding: 2px; }");
-    clipSmallLayout->addWidget(btnCopy);
+    m_btnCopy = new QToolButton(this);
+    m_btnCopy->setDefaultAction(actCopy);
+    m_btnCopy->setIcon(QIcon(QStringLiteral(":/icons/copy.svg")));
+    m_btnCopy->setText(QStringLiteral(" ") + tr("Copy"));
+    m_btnCopy->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    m_btnCopy->setFixedHeight(22);
+    m_btnCopy->setMinimumWidth(64);
+    m_btnCopy->setStyleSheet("QToolButton { font-size: 8pt; padding: 2px; }");
+    clipSmallLayout->addWidget(m_btnCopy);
 
     clipLayout->addLayout(clipSmallLayout);
-    homeLayout->addWidget(createRibbonGroup(QStringLiteral("Appunti"), clipLayout));
+    homeLayout->addWidget(createRibbonGroup(tr("Clipboard"), clipLayout, &m_lblGroupClipboard));
 
-    // 2. Font Group (Carattere)
+    // 2. Font Group
     auto fontMainLayout = new QVBoxLayout();
     fontMainLayout->setContentsMargins(0, 0, 0, 0);
     fontMainLayout->setSpacing(3);
@@ -225,58 +251,58 @@ void RibbonBar::setupHomeTab() {
     for (int s : sizes) cbFontSize->addItem(QString::number(s));
     cbFontSize->setCurrentText(QStringLiteral("11"));
 
-    actGrowFont = new QAction(QIcon(QStringLiteral(":/icons/font_grow.svg")), QStringLiteral("Ingrandisci carattere"), this);
-    actShrinkFont = new QAction(QIcon(QStringLiteral(":/icons/font_shrink.svg")), QStringLiteral("Riduci carattere"), this);
+    actGrowFont = new QAction(QIcon(QStringLiteral(":/icons/font_grow.svg")), tr("Grow font"), this);
+    actShrinkFont = new QAction(QIcon(QStringLiteral(":/icons/font_shrink.svg")), tr("Shrink font"), this);
 
     fontRow1->addWidget(cbFontFamily);
     fontRow1->addWidget(cbFontSize);
-    fontRow1->addWidget(createSmallButton(actGrowFont, QStringLiteral(":/icons/font_grow.svg"), QStringLiteral("Ingrandisci carattere (Ctrl+Shift+>)")));
-    fontRow1->addWidget(createSmallButton(actShrinkFont, QStringLiteral(":/icons/font_shrink.svg"), QStringLiteral("Riduci carattere (Ctrl+Shift+<)")));
+    fontRow1->addWidget(createSmallButton(actGrowFont, QStringLiteral(":/icons/font_grow.svg"), tr("Grow font") + QStringLiteral(" (Ctrl+Shift+>)")));
+    fontRow1->addWidget(createSmallButton(actShrinkFont, QStringLiteral(":/icons/font_shrink.svg"), tr("Shrink font") + QStringLiteral(" (Ctrl+Shift+<)")));
     fontRow1->addStretch();
     fontMainLayout->addLayout(fontRow1);
 
-    // Row 2: Bold (G), Italic (C), Underline (S), Strikethrough (abc), Subscript, Superscript, Font Color, Highlight Color
+    // Row 2: Bold, Italic, Underline, Strikethrough, Subscript, Superscript, Font Color, Highlight Color
     auto fontRow2 = new QHBoxLayout();
     fontRow2->setContentsMargins(0, 0, 0, 0);
     fontRow2->setSpacing(2);
 
-    actBold = new QAction(QIcon(QStringLiteral(":/icons/bold.svg")), QStringLiteral("Grassetto"), this);
+    actBold = new QAction(QIcon(QStringLiteral(":/icons/bold.svg")), tr("Bold"), this);
     actBold->setCheckable(true);
     actBold->setShortcut(QKeySequence::Bold);
-    actItalic = new QAction(QIcon(QStringLiteral(":/icons/italic.svg")), QStringLiteral("Corsivo"), this);
+    actItalic = new QAction(QIcon(QStringLiteral(":/icons/italic.svg")), tr("Italic"), this);
     actItalic->setCheckable(true);
     actItalic->setShortcut(QKeySequence::Italic);
-    actUnderline = new QAction(QIcon(QStringLiteral(":/icons/underline.svg")), QStringLiteral("Sottolineato"), this);
+    actUnderline = new QAction(QIcon(QStringLiteral(":/icons/underline.svg")), tr("Underline"), this);
     actUnderline->setCheckable(true);
     actUnderline->setShortcut(QKeySequence::Underline);
-    actStrike = new QAction(QIcon(QStringLiteral(":/icons/strikethrough.svg")), QStringLiteral("Barrato"), this);
+    actStrike = new QAction(QIcon(QStringLiteral(":/icons/strikethrough.svg")), tr("Strikethrough"), this);
     actStrike->setCheckable(true);
-    actSubscript = new QAction(QIcon(QStringLiteral(":/icons/subscript.svg")), QStringLiteral("Pedice"), this);
+    actSubscript = new QAction(QIcon(QStringLiteral(":/icons/subscript.svg")), tr("Subscript"), this);
     actSubscript->setCheckable(true);
-    actSuperscript = new QAction(QIcon(QStringLiteral(":/icons/superscript.svg")), QStringLiteral("Apice"), this);
+    actSuperscript = new QAction(QIcon(QStringLiteral(":/icons/superscript.svg")), tr("Superscript"), this);
     actSuperscript->setCheckable(true);
     
-    actFontColor = new QAction(QIcon(QStringLiteral(":/icons/font_color.svg")), QStringLiteral("Colore testo"), this);
-    actHighlightColor = new QAction(QIcon(QStringLiteral(":/icons/highlight_color.svg")), QStringLiteral("Colore evidenziatore"), this);
+    actFontColor = new QAction(QIcon(QStringLiteral(":/icons/font_color.svg")), tr("Text color"), this);
+    actHighlightColor = new QAction(QIcon(QStringLiteral(":/icons/highlight_color.svg")), tr("Text highlight color"), this);
 
     connect(actFontColor, &QAction::triggered, this, &RibbonBar::onFontColorClicked);
     connect(actHighlightColor, &QAction::triggered, this, &RibbonBar::onHighlightColorClicked);
 
-    fontRow2->addWidget(createSmallButton(actBold, QStringLiteral(":/icons/bold.svg"), QStringLiteral("Grassetto (Ctrl+B)")));
-    fontRow2->addWidget(createSmallButton(actItalic, QStringLiteral(":/icons/italic.svg"), QStringLiteral("Corsivo (Ctrl+I)")));
-    fontRow2->addWidget(createSmallButton(actUnderline, QStringLiteral(":/icons/underline.svg"), QStringLiteral("Sottolineato (Ctrl+U)")));
-    fontRow2->addWidget(createSmallButton(actStrike, QStringLiteral(":/icons/strikethrough.svg"), QStringLiteral("Barrato")));
-    fontRow2->addWidget(createSmallButton(actSubscript, QStringLiteral(":/icons/subscript.svg"), QStringLiteral("Pedice")));
-    fontRow2->addWidget(createSmallButton(actSuperscript, QStringLiteral(":/icons/superscript.svg"), QStringLiteral("Apice")));
+    fontRow2->addWidget(createSmallButton(actBold, QStringLiteral(":/icons/bold.svg"), tr("Bold") + QStringLiteral(" (Ctrl+B)")));
+    fontRow2->addWidget(createSmallButton(actItalic, QStringLiteral(":/icons/italic.svg"), tr("Italic") + QStringLiteral(" (Ctrl+I)")));
+    fontRow2->addWidget(createSmallButton(actUnderline, QStringLiteral(":/icons/underline.svg"), tr("Underline") + QStringLiteral(" (Ctrl+U)")));
+    fontRow2->addWidget(createSmallButton(actStrike, QStringLiteral(":/icons/strikethrough.svg"), tr("Strikethrough")));
+    fontRow2->addWidget(createSmallButton(actSubscript, QStringLiteral(":/icons/subscript.svg"), tr("Subscript")));
+    fontRow2->addWidget(createSmallButton(actSuperscript, QStringLiteral(":/icons/superscript.svg"), tr("Superscript")));
     fontRow2->addSpacing(3);
-    fontRow2->addWidget(createSmallButton(actFontColor, QStringLiteral(":/icons/font_color.svg"), QStringLiteral("Colore testo")));
-    fontRow2->addWidget(createSmallButton(actHighlightColor, QStringLiteral(":/icons/highlight_color.svg"), QStringLiteral("Colore evidenziatore")));
+    fontRow2->addWidget(createSmallButton(actFontColor, QStringLiteral(":/icons/font_color.svg"), tr("Text color")));
+    fontRow2->addWidget(createSmallButton(actHighlightColor, QStringLiteral(":/icons/highlight_color.svg"), tr("Text highlight color")));
     fontRow2->addStretch();
     fontMainLayout->addLayout(fontRow2);
 
-    homeLayout->addWidget(createRibbonGroup(QStringLiteral("Carattere"), fontMainLayout));
+    homeLayout->addWidget(createRibbonGroup(tr("Font"), fontMainLayout, &m_lblGroupFont));
 
-    // 3. Paragraph Group (Paragrafo)
+    // 3. Paragraph Group
     auto paraMainLayout = new QVBoxLayout();
     paraMainLayout->setContentsMargins(0, 0, 0, 0);
     paraMainLayout->setSpacing(3);
@@ -286,30 +312,30 @@ void RibbonBar::setupHomeTab() {
     paraRow1->setContentsMargins(0, 0, 0, 0);
     paraRow1->setSpacing(2);
 
-    actDecreaseIndent = new QAction(QIcon(QStringLiteral(":/icons/indent_dec.svg")), QStringLiteral("Riduci rientro"), this);
-    actIncreaseIndent = new QAction(QIcon(QStringLiteral(":/icons/indent_inc.svg")), QStringLiteral("Aumenta rientro"), this);
+    actDecreaseIndent = new QAction(QIcon(QStringLiteral(":/icons/indent_dec.svg")), tr("Decrease indent"), this);
+    actIncreaseIndent = new QAction(QIcon(QStringLiteral(":/icons/indent_inc.svg")), tr("Increase indent"), this);
 
     // List Style Menu
     auto btnList = new QToolButton(this);
     btnList->setIcon(QIcon(QStringLiteral(":/icons/list_bullets.svg")));
     btnList->setPopupMode(QToolButton::InstantPopup);
-    btnList->setToolTip(QStringLiteral("Inizia un elenco"));
+    btnList->setToolTip(tr("Start a list"));
     btnList->setFixedSize(22, 22);
     QMenu *listMenu = new QMenu(this);
-    actListNone = listMenu->addAction(QStringLiteral("Nessuno"));
-    actListBullet = listMenu->addAction(QStringLiteral("• Elenco puntato"));
-    actListNumber = listMenu->addAction(QStringLiteral("1, 2, 3 Numerato"));
-    actListAlphaLower = listMenu->addAction(QStringLiteral("a, b, c Lettere minuscole"));
-    actListAlphaUpper = listMenu->addAction(QStringLiteral("A, B, C Lettere maiuscole"));
-    actListRomanLower = listMenu->addAction(QStringLiteral("i, ii, iii Numeri romani minuscoli"));
-    actListRomanUpper = listMenu->addAction(QStringLiteral("I, II, III Numeri romani maiuscoli"));
+    actListNone = listMenu->addAction(QStringLiteral("None"));
+    actListBullet = listMenu->addAction(QStringLiteral("• Bulleted list"));
+    actListNumber = listMenu->addAction(QStringLiteral("1, 2, 3 Numbered"));
+    actListAlphaLower = listMenu->addAction(QStringLiteral("a, b, c Lowercase"));
+    actListAlphaUpper = listMenu->addAction(QStringLiteral("A, B, C Uppercase"));
+    actListRomanLower = listMenu->addAction(QStringLiteral("i, ii, iii Roman lowercase"));
+    actListRomanUpper = listMenu->addAction(QStringLiteral("I, II, III Roman uppercase"));
     btnList->setMenu(listMenu);
 
     // Line Spacing Menu
     auto btnLineSpacing = new QToolButton(this);
     btnLineSpacing->setIcon(QIcon(QStringLiteral(":/icons/line_spacing.svg")));
     btnLineSpacing->setPopupMode(QToolButton::InstantPopup);
-    btnLineSpacing->setToolTip(QStringLiteral("Interlinea"));
+    btnLineSpacing->setToolTip(tr("Line spacing"));
     btnLineSpacing->setFixedSize(22, 22);
     QMenu *lsMenu = new QMenu(this);
     actLineSpacing10 = lsMenu->addAction(QStringLiteral("1.0"));
@@ -317,15 +343,15 @@ void RibbonBar::setupHomeTab() {
     actLineSpacing15 = lsMenu->addAction(QStringLiteral("1.5"));
     actLineSpacing20 = lsMenu->addAction(QStringLiteral("2.0"));
     lsMenu->addSeparator();
-    actLineSpacingAdd10pt = lsMenu->addAction(QStringLiteral("Aggiungi spazio di 10 pt dopo i paragrafi"));
+    actLineSpacingAdd10pt = lsMenu->addAction(QStringLiteral("Add 10pt space after paragraphs"));
     actLineSpacingAdd10pt->setCheckable(true);
     actLineSpacingAdd10pt->setChecked(true);
     btnLineSpacing->setMenu(lsMenu);
 
-    actParagraphDialog = new QAction(QIcon(QStringLiteral(":/icons/paragraph.svg")), QStringLiteral("Paragrafo"), this);
+    actParagraphDialog = new QAction(QIcon(QStringLiteral(":/icons/paragraph.svg")), tr("Paragraph"), this);
 
-    paraRow1->addWidget(createSmallButton(actDecreaseIndent, QStringLiteral(":/icons/indent_dec.svg"), QStringLiteral("Riduci rientro")));
-    paraRow1->addWidget(createSmallButton(actIncreaseIndent, QStringLiteral(":/icons/indent_inc.svg"), QStringLiteral("Aumenta rientro")));
+    paraRow1->addWidget(createSmallButton(actDecreaseIndent, QStringLiteral(":/icons/indent_dec.svg"), tr("Decrease indent")));
+    paraRow1->addWidget(createSmallButton(actIncreaseIndent, QStringLiteral(":/icons/indent_inc.svg"), tr("Increase indent")));
     paraRow1->addWidget(btnList);
     paraRow1->addWidget(btnLineSpacing);
     paraRow1->addStretch();
@@ -336,20 +362,20 @@ void RibbonBar::setupHomeTab() {
     paraRow2->setContentsMargins(0, 0, 0, 0);
     paraRow2->setSpacing(2);
 
-    actAlignLeft = new QAction(QIcon(QStringLiteral(":/icons/align_left.svg")), QStringLiteral("Allinea a sinistra"), this);
+    actAlignLeft = new QAction(QIcon(QStringLiteral(":/icons/align_left.svg")), tr("Align text left"), this);
     actAlignLeft->setCheckable(true);
     actAlignLeft->setChecked(true);
     actAlignLeft->setShortcut(QKeySequence(QStringLiteral("Ctrl+L")));
 
-    actAlignCenter = new QAction(QIcon(QStringLiteral(":/icons/align_center.svg")), QStringLiteral("Allinea al centro"), this);
+    actAlignCenter = new QAction(QIcon(QStringLiteral(":/icons/align_center.svg")), tr("Center"), this);
     actAlignCenter->setCheckable(true);
     actAlignCenter->setShortcut(QKeySequence(QStringLiteral("Ctrl+E")));
 
-    actAlignRight = new QAction(QIcon(QStringLiteral(":/icons/align_right.svg")), QStringLiteral("Allinea a destra"), this);
+    actAlignRight = new QAction(QIcon(QStringLiteral(":/icons/align_right.svg")), tr("Align text right"), this);
     actAlignRight->setCheckable(true);
     actAlignRight->setShortcut(QKeySequence(QStringLiteral("Ctrl+R")));
 
-    actAlignJustify = new QAction(QIcon(QStringLiteral(":/icons/align_justify.svg")), QStringLiteral("Giustifica"), this);
+    actAlignJustify = new QAction(QIcon(QStringLiteral(":/icons/align_justify.svg")), tr("Justify"), this);
     actAlignJustify->setCheckable(true);
     actAlignJustify->setShortcut(QKeySequence(QStringLiteral("Ctrl+J")));
 
@@ -359,62 +385,62 @@ void RibbonBar::setupHomeTab() {
     alignGroup->addAction(actAlignRight);
     alignGroup->addAction(actAlignJustify);
 
-    paraRow2->addWidget(createSmallButton(actAlignLeft, QStringLiteral(":/icons/align_left.svg"), QStringLiteral("Allinea a sinistra (Ctrl+L)")));
-    paraRow2->addWidget(createSmallButton(actAlignCenter, QStringLiteral(":/icons/align_center.svg"), QStringLiteral("Allinea al centro (Ctrl+E)")));
-    paraRow2->addWidget(createSmallButton(actAlignRight, QStringLiteral(":/icons/align_right.svg"), QStringLiteral("Allinea a destra (Ctrl+R)")));
-    paraRow2->addWidget(createSmallButton(actAlignJustify, QStringLiteral(":/icons/align_justify.svg"), QStringLiteral("Giustifica (Ctrl+J)")));
-    paraRow2->addWidget(createSmallButton(actParagraphDialog, QStringLiteral(":/icons/paragraph.svg"), QStringLiteral("Proprietà paragrafo")));
+    paraRow2->addWidget(createSmallButton(actAlignLeft, QStringLiteral(":/icons/align_left.svg"), tr("Align text left") + QStringLiteral(" (Ctrl+L)")));
+    paraRow2->addWidget(createSmallButton(actAlignCenter, QStringLiteral(":/icons/align_center.svg"), tr("Center") + QStringLiteral(" (Ctrl+E)")));
+    paraRow2->addWidget(createSmallButton(actAlignRight, QStringLiteral(":/icons/align_right.svg"), tr("Align text right") + QStringLiteral(" (Ctrl+R)")));
+    paraRow2->addWidget(createSmallButton(actAlignJustify, QStringLiteral(":/icons/align_justify.svg"), tr("Justify") + QStringLiteral(" (Ctrl+J)")));
+    paraRow2->addWidget(createSmallButton(actParagraphDialog, QStringLiteral(":/icons/paragraph.svg"), tr("Paragraph")));
     paraRow2->addStretch();
     paraMainLayout->addLayout(paraRow2);
 
-    homeLayout->addWidget(createRibbonGroup(QStringLiteral("Paragrafo"), paraMainLayout));
+    homeLayout->addWidget(createRibbonGroup(tr("Paragraph"), paraMainLayout, &m_lblGroupPara));
 
-    // 4. Insert Group (Inserisci)
+    // 4. Insert Group
     auto insertLayout = new QHBoxLayout();
     insertLayout->setContentsMargins(0, 0, 0, 0);
     insertLayout->setSpacing(4);
 
-    actInsertPicture = new QAction(QIcon(QStringLiteral(":/icons/picture.svg")), QStringLiteral("Immagine"), this);
-    actChangePicture = new QAction(QIcon(QStringLiteral(":/icons/picture.svg")), QStringLiteral("Cambia immagine"), this);
-    actResizePicture = new QAction(QIcon(QStringLiteral(":/icons/picture.svg")), QStringLiteral("Ridimensiona immagine"), this);
+    actInsertPicture = new QAction(QIcon(QStringLiteral(":/icons/picture.svg")), tr("Picture"), this);
+    actChangePicture = new QAction(QIcon(QStringLiteral(":/icons/picture.svg")), tr("Change picture"), this);
+    actResizePicture = new QAction(QIcon(QStringLiteral(":/icons/picture.svg")), tr("Resize picture"), this);
 
-    auto btnPic = createLargeButton(actInsertPicture, QStringLiteral(":/icons/picture.svg"), QStringLiteral("Immagine"));
-    btnPic->setFixedSize(82, 66);
+    m_btnPic = createLargeButton(actInsertPicture, QStringLiteral(":/icons/picture.svg"), tr("Picture"));
+    m_btnPic->setFixedSize(82, 66);
     QMenu *picMenu = new QMenu(this);
     picMenu->addAction(actInsertPicture);
     picMenu->addAction(actChangePicture);
     picMenu->addAction(actResizePicture);
-    btnPic->setMenu(picMenu);
-    btnPic->setPopupMode(QToolButton::MenuButtonPopup);
-    insertLayout->addWidget(btnPic);
+    m_btnPic->setMenu(picMenu);
+    m_btnPic->setPopupMode(QToolButton::MenuButtonPopup);
+    insertLayout->addWidget(m_btnPic);
 
-    actPaintDrawing = new QAction(QIcon(QStringLiteral(":/icons/paint.svg")), QStringLiteral("Disegno\ndi Paint"), this);
-    auto btnPaint = createLargeButton(actPaintDrawing, QStringLiteral(":/icons/paint.svg"), QStringLiteral("Disegno\ndi Paint"));
-    btnPaint->setFixedSize(76, 66);
-    insertLayout->addWidget(btnPaint);
+    actPaintDrawing = new QAction(QIcon(QStringLiteral(":/icons/paint.svg")), tr("Paint drawing"), this);
+    m_btnPaint = createLargeButton(actPaintDrawing, QStringLiteral(":/icons/paint.svg"), tr("Paint drawing"));
+    m_btnPaint->setFixedSize(76, 66);
+    insertLayout->addWidget(m_btnPaint);
 
-    actDateTime = new QAction(QIcon(QStringLiteral(":/icons/datetime.svg")), QStringLiteral("Data\ne ora"), this);
-    auto btnDate = createLargeButton(actDateTime, QStringLiteral(":/icons/datetime.svg"), QStringLiteral("Data\ne ora"));
-    btnDate->setFixedSize(68, 66);
-    insertLayout->addWidget(btnDate);
+    actDateTime = new QAction(QIcon(QStringLiteral(":/icons/datetime.svg")), tr("Date and time"), this);
+    m_btnDate = createLargeButton(actDateTime, QStringLiteral(":/icons/datetime.svg"), tr("Date and time"));
+    m_btnDate->setFixedSize(68, 66);
+    insertLayout->addWidget(m_btnDate);
 
-    actInsertObject = new QAction(QIcon(QStringLiteral(":/icons/object.svg")), QStringLiteral("Inserisci\noggetto"), this);
-    auto btnObj = createLargeButton(actInsertObject, QStringLiteral(":/icons/object.svg"), QStringLiteral("Inserisci\noggetto"));
-    btnObj->setFixedSize(78, 66);
-    insertLayout->addWidget(btnObj);
+    actInsertObject = new QAction(QIcon(QStringLiteral(":/icons/object.svg")), tr("Insert object"), this);
+    m_btnObj = createLargeButton(actInsertObject, QStringLiteral(":/icons/object.svg"), tr("Insert object"));
+    m_btnObj->setFixedSize(78, 66);
+    insertLayout->addWidget(m_btnObj);
 
-    homeLayout->addWidget(createRibbonGroup(QStringLiteral("Inserisci"), insertLayout));
+    homeLayout->addWidget(createRibbonGroup(tr("Insert"), insertLayout, &m_lblGroupInsert));
 
-    // 5. Editing Group (Modifica)
+    // 5. Editing Group
     auto editLayout = new QVBoxLayout();
     editLayout->setContentsMargins(0, 2, 0, 2);
     editLayout->setSpacing(2);
 
-    actFind = new QAction(QIcon(QStringLiteral(":/icons/find.svg")), QStringLiteral("Trova"), this);
+    actFind = new QAction(QIcon(QStringLiteral(":/icons/find.svg")), tr("Find"), this);
     actFind->setShortcut(QKeySequence::Find);
-    actReplace = new QAction(QIcon(QStringLiteral(":/icons/replace.svg")), QStringLiteral("Sostituisci"), this);
+    actReplace = new QAction(QIcon(QStringLiteral(":/icons/replace.svg")), tr("Replace"), this);
     actReplace->setShortcut(QKeySequence(QStringLiteral("Ctrl+H")));
-    actSelectAll = new QAction(QIcon(QStringLiteral(":/icons/select_all.svg")), QStringLiteral("Seleziona tutto"), this);
+    actSelectAll = new QAction(QIcon(QStringLiteral(":/icons/select_all.svg")), tr("Select all"), this);
     actSelectAll->setShortcut(QKeySequence::SelectAll);
 
     auto makeEditBtn = [&](QAction *act, const QString &icon, const QString &text) {
@@ -428,11 +454,15 @@ void RibbonBar::setupHomeTab() {
         return btn;
     };
 
-    editLayout->addWidget(makeEditBtn(actFind, QStringLiteral(":/icons/find.svg"), QStringLiteral(" Trova")));
-    editLayout->addWidget(makeEditBtn(actReplace, QStringLiteral(":/icons/replace.svg"), QStringLiteral(" Sostituisci")));
-    editLayout->addWidget(makeEditBtn(actSelectAll, QStringLiteral(":/icons/select_all.svg"), QStringLiteral(" Seleziona tutto")));
+    m_btnFind = makeEditBtn(actFind, QStringLiteral(":/icons/find.svg"), QStringLiteral(" ") + tr("Find"));
+    m_btnReplace = makeEditBtn(actReplace, QStringLiteral(":/icons/replace.svg"), QStringLiteral(" ") + tr("Replace"));
+    m_btnSelectAll = makeEditBtn(actSelectAll, QStringLiteral(":/icons/select_all.svg"), QStringLiteral(" ") + tr("Select all"));
 
-    homeLayout->addWidget(createRibbonGroup(QStringLiteral("Modifica"), editLayout));
+    editLayout->addWidget(m_btnFind);
+    editLayout->addWidget(m_btnReplace);
+    editLayout->addWidget(m_btnSelectAll);
+
+    homeLayout->addWidget(createRibbonGroup(tr("Editing"), editLayout, &m_lblGroupEdit));
     homeLayout->addStretch();
 }
 
@@ -445,70 +475,96 @@ void RibbonBar::setupViewTab() {
     auto zoomLayout = new QHBoxLayout();
     zoomLayout->setContentsMargins(0, 0, 0, 0);
     zoomLayout->setSpacing(4);
-    actZoomIn = new QAction(QIcon(QStringLiteral(":/icons/zoom_in.svg")), QStringLiteral("Ingrandisci"), this);
-    actZoomOut = new QAction(QIcon(QStringLiteral(":/icons/zoom_out.svg")), QStringLiteral("Riduci"), this);
-    actZoom100 = new QAction(QIcon(QStringLiteral(":/icons/zoom_100.svg")), QStringLiteral("100%"), this);
+    actZoomIn = new QAction(QIcon(QStringLiteral(":/icons/zoom_in.svg")), tr("Zoom in"), this);
+    actZoomOut = new QAction(QIcon(QStringLiteral(":/icons/zoom_out.svg")), tr("Zoom out"), this);
+    actZoom100 = new QAction(QIcon(QStringLiteral(":/icons/zoom_100.svg")), tr("100%"), this);
 
-    auto btnZoomIn = createLargeButton(actZoomIn, QStringLiteral(":/icons/zoom_in.svg"), QStringLiteral("Ingrandisci"));
-    btnZoomIn->setFixedSize(68, 66);
-    auto btnZoomOut = createLargeButton(actZoomOut, QStringLiteral(":/icons/zoom_out.svg"), QStringLiteral("Riduci"));
-    btnZoomOut->setFixedSize(68, 66);
-    auto btnZoom100 = createLargeButton(actZoom100, QStringLiteral(":/icons/zoom_100.svg"), QStringLiteral("100%"));
-    btnZoom100->setFixedSize(68, 66);
+    m_btnZoomIn = createLargeButton(actZoomIn, QStringLiteral(":/icons/zoom_in.svg"), tr("Zoom in"));
+    m_btnZoomIn->setFixedSize(68, 66);
+    m_btnZoomOut = createLargeButton(actZoomOut, QStringLiteral(":/icons/zoom_out.svg"), tr("Zoom out"));
+    m_btnZoomOut->setFixedSize(68, 66);
+    m_btnZoom100 = createLargeButton(actZoom100, QStringLiteral(":/icons/zoom_100.svg"), tr("100%"));
+    m_btnZoom100->setFixedSize(68, 66);
 
-    zoomLayout->addWidget(btnZoomIn);
-    zoomLayout->addWidget(btnZoomOut);
-    zoomLayout->addWidget(btnZoom100);
-    viewLayout->addWidget(createRibbonGroup(QStringLiteral("Zoom"), zoomLayout));
+    zoomLayout->addWidget(m_btnZoomIn);
+    zoomLayout->addWidget(m_btnZoomOut);
+    zoomLayout->addWidget(m_btnZoom100);
+    viewLayout->addWidget(createRibbonGroup(tr("Zoom"), zoomLayout, &m_lblGroupZoom));
 
-    // 2. Show or Hide Group (Mostra o nascondi)
+    // 2. Show or Hide Group
     auto showHideLayout = new QVBoxLayout();
     showHideLayout->setContentsMargins(0, 0, 0, 0);
     showHideLayout->setSpacing(2);
-    chkRuler = new QCheckBox(QStringLiteral("Righello"), this);
+    chkRuler = new QCheckBox(tr("Ruler"), this);
     chkRuler->setChecked(true);
-    chkStatusBar = new QCheckBox(QStringLiteral("Barra di stato"), this);
+    chkStatusBar = new QCheckBox(tr("Status bar"), this);
     chkStatusBar->setChecked(true);
     showHideLayout->addWidget(chkRuler);
     showHideLayout->addWidget(chkStatusBar);
     showHideLayout->addStretch();
-    viewLayout->addWidget(createRibbonGroup(QStringLiteral("Mostra o nascondi"), showHideLayout));
+    viewLayout->addWidget(createRibbonGroup(tr("Show or hide"), showHideLayout, &m_lblGroupShowHide));
 
-    // 3. Settings Group (Impostazioni)
+    // 3. Settings Group
     auto settingsLayout = new QVBoxLayout();
     settingsLayout->setContentsMargins(0, 0, 0, 0);
     settingsLayout->setSpacing(2);
 
     auto wrapLayout = new QHBoxLayout();
     wrapLayout->setContentsMargins(0, 0, 0, 0);
-    wrapLayout->addWidget(new QLabel(QStringLiteral("A capo automatico:"), this));
+    m_lblWordWrap = new QLabel(tr("Word wrap:"), this);
+    wrapLayout->addWidget(m_lblWordWrap);
     cbWordWrap = new QComboBox(this);
     cbWordWrap->setView(new QListView(cbWordWrap));
-    cbWordWrap->addItem(QStringLiteral("Nessun a capo"), static_cast<int>(WrapMode::NoWrap));
-    cbWordWrap->addItem(QStringLiteral("Adatta alla finestra"), static_cast<int>(WrapMode::WrapToWindow));
-    cbWordWrap->addItem(QStringLiteral("Adatta al righello"), static_cast<int>(WrapMode::WrapToRuler));
+    cbWordWrap->addItem(tr("No wrap"), static_cast<int>(WrapMode::NoWrap));
+    cbWordWrap->addItem(tr("Wrap to window"), static_cast<int>(WrapMode::WrapToWindow));
+    cbWordWrap->addItem(tr("Wrap to ruler"), static_cast<int>(WrapMode::WrapToRuler));
     cbWordWrap->setCurrentIndex(2); // Wrap to ruler default
     wrapLayout->addWidget(cbWordWrap);
     settingsLayout->addLayout(wrapLayout);
 
     auto unitsLayout = new QHBoxLayout();
     unitsLayout->setContentsMargins(0, 0, 0, 0);
-    unitsLayout->addWidget(new QLabel(QStringLiteral("Unità di misura:"), this));
+    m_lblUnits = new QLabel(tr("Measurement units:"), this);
+    unitsLayout->addWidget(m_lblUnits);
     cbUnits = new QComboBox(this);
     cbUnits->setView(new QListView(cbUnits));
-    cbUnits->addItem(QStringLiteral("Pollici"), static_cast<int>(UnitType::Inches));
-    cbUnits->addItem(QStringLiteral("Centimetri"), static_cast<int>(UnitType::Centimeters));
-    cbUnits->addItem(QStringLiteral("Punti"), static_cast<int>(UnitType::Points));
-    cbUnits->addItem(QStringLiteral("Pica"), static_cast<int>(UnitType::Picas));
+    cbUnits->addItem(tr("Inches"), static_cast<int>(UnitType::Inches));
+    cbUnits->addItem(tr("Centimeters"), static_cast<int>(UnitType::Centimeters));
+    cbUnits->addItem(tr("Points"), static_cast<int>(UnitType::Points));
+    cbUnits->addItem(tr("Picas"), static_cast<int>(UnitType::Picas));
     cbUnits->setCurrentIndex(1); // Centimeters default
     unitsLayout->addWidget(cbUnits);
     settingsLayout->addLayout(unitsLayout);
 
-    viewLayout->addWidget(createRibbonGroup(QStringLiteral("Impostazioni"), settingsLayout));
+    auto langLayout = new QHBoxLayout();
+    langLayout->setContentsMargins(0, 0, 0, 0);
+    m_lblLanguage = new QLabel(tr("Language:"), this);
+    langLayout->addWidget(m_lblLanguage);
+    cbLanguage = new QComboBox(this);
+    cbLanguage->setView(new QListView(cbLanguage));
+    
+    for (const auto &info : TranslationManager::instance().availableLanguages()) {
+        cbLanguage->addItem(info.nativeName, info.code);
+    }
+    QString curLang = TranslationManager::instance().currentLanguage();
+    for (int i = 0; i < cbLanguage->count(); ++i) {
+        if (cbLanguage->itemData(i).toString() == curLang) {
+            cbLanguage->setCurrentIndex(i);
+            break;
+        }
+    }
+    connect(cbLanguage, QOverload<int>::of(&QComboBox::currentIndexChanged), this, [this](int idx) {
+        QString langCode = cbLanguage->itemData(idx).toString();
+        emit languageChanged(langCode);
+    });
+    langLayout->addWidget(cbLanguage);
+    settingsLayout->addLayout(langLayout);
+
+    viewLayout->addWidget(createRibbonGroup(tr("Settings"), settingsLayout, &m_lblGroupSettings));
     viewLayout->addStretch();
 }
 
-QWidget *RibbonBar::createRibbonGroup(const QString &title, QLayout *contentLayout) {
+QWidget *RibbonBar::createRibbonGroup(const QString &title, QLayout *contentLayout, QLabel **outLabel) {
     auto groupWidget = new QWidget(this);
     auto vLayout = new QVBoxLayout(groupWidget);
     vLayout->setContentsMargins(6, 2, 6, 2);
@@ -523,6 +579,10 @@ QWidget *RibbonBar::createRibbonGroup(const QString &title, QLayout *contentLayo
     lblTitle->setFixedHeight(15);
     lblTitle->setStyleSheet("color: #717171; font-size: 8pt; font-family: 'Segoe UI', 'DejaVu Sans', sans-serif; font-weight: normal; margin: 0; padding: 0; border: none;");
     vLayout->addWidget(lblTitle, 0);
+
+    if (outLabel) {
+        *outLabel = lblTitle;
+    }
 
     groupWidget->setStyleSheet("QWidget { border-right: 1px solid #e0e0e0; }");
     return groupWidget;
@@ -551,9 +611,169 @@ QToolButton *RibbonBar::createSmallButton(QAction *action, const QString &iconPa
     return btn;
 }
 
+void RibbonBar::retranslateUi() {
+    m_tabWidget->setTabText(0, tr("Home"));
+    m_tabWidget->setTabText(1, tr("View"));
+
+    m_btnFile->setText(QStringLiteral("  ") + tr("File") + QStringLiteral("  "));
+
+    // Actions
+    actNew->setText(tr("New"));
+    actOpen->setText(tr("Open..."));
+    actSave->setText(tr("Save"));
+    actSaveAsRtf->setText(tr("Save As..."));
+    actPrint->setText(tr("Print..."));
+    actQuickPrint->setText(tr("Quick Print"));
+    actPrintPreview->setText(tr("Print Preview"));
+    actPageSetup->setText(tr("Page Setup..."));
+    actEmail->setText(tr("Send in email"));
+    actAbout->setText(tr("About WordPad"));
+    actExit->setText(tr("Exit"));
+
+    actPaste->setText(tr("Paste"));
+    actPasteSpecial->setText(tr("Paste Special..."));
+    actCut->setText(tr("Cut"));
+    actCopy->setText(tr("Copy"));
+
+    actGrowFont->setText(tr("Grow font"));
+    actShrinkFont->setText(tr("Shrink font"));
+    actBold->setText(tr("Bold"));
+    actItalic->setText(tr("Italic"));
+    actUnderline->setText(tr("Underline"));
+    actStrike->setText(tr("Strikethrough"));
+    actSubscript->setText(tr("Subscript"));
+    actSuperscript->setText(tr("Superscript"));
+    actFontColor->setText(tr("Text color"));
+    actHighlightColor->setText(tr("Text highlight color"));
+
+    actDecreaseIndent->setText(tr("Decrease indent"));
+    actIncreaseIndent->setText(tr("Increase indent"));
+    actAlignLeft->setText(tr("Align text left"));
+    actAlignCenter->setText(tr("Center"));
+    actAlignRight->setText(tr("Align text right"));
+    actAlignJustify->setText(tr("Justify"));
+    actParagraphDialog->setText(tr("Paragraph"));
+
+    actInsertPicture->setText(tr("Picture"));
+    actChangePicture->setText(tr("Change picture"));
+    actResizePicture->setText(tr("Resize picture"));
+    actPaintDrawing->setText(tr("Paint drawing"));
+    actDateTime->setText(tr("Date and time"));
+    actInsertObject->setText(tr("Insert object"));
+
+    actFind->setText(tr("Find"));
+    actReplace->setText(tr("Replace"));
+    actSelectAll->setText(tr("Select all"));
+
+    actZoomIn->setText(tr("Zoom in"));
+    actZoomOut->setText(tr("Zoom out"));
+    actZoom100->setText(tr("100%"));
+
+    // Group labels
+    if (m_lblGroupClipboard) m_lblGroupClipboard->setText(tr("Clipboard"));
+    if (m_lblGroupFont) m_lblGroupFont->setText(tr("Font"));
+    if (m_lblGroupPara) m_lblGroupPara->setText(tr("Paragraph"));
+    if (m_lblGroupInsert) m_lblGroupInsert->setText(tr("Insert"));
+    if (m_lblGroupEdit) m_lblGroupEdit->setText(tr("Editing"));
+    if (m_lblGroupZoom) m_lblGroupZoom->setText(tr("Zoom"));
+    if (m_lblGroupShowHide) m_lblGroupShowHide->setText(tr("Show or hide"));
+    if (m_lblGroupSettings) m_lblGroupSettings->setText(tr("Settings"));
+
+    // Buttons
+    if (m_btnPaste) m_btnPaste->setText(tr("Paste"));
+    if (m_btnCut) m_btnCut->setText(QStringLiteral(" ") + tr("Cut"));
+    if (m_btnCopy) m_btnCopy->setText(QStringLiteral(" ") + tr("Copy"));
+    if (m_btnPic) m_btnPic->setText(tr("Picture"));
+    if (m_btnPaint) m_btnPaint->setText(tr("Paint drawing"));
+    if (m_btnDate) m_btnDate->setText(tr("Date and time"));
+    if (m_btnObj) m_btnObj->setText(tr("Insert object"));
+    if (m_btnFind) m_btnFind->setText(QStringLiteral(" ") + tr("Find"));
+    if (m_btnReplace) m_btnReplace->setText(QStringLiteral(" ") + tr("Replace"));
+    if (m_btnSelectAll) m_btnSelectAll->setText(QStringLiteral(" ") + tr("Select all"));
+    if (m_btnZoomIn) m_btnZoomIn->setText(tr("Zoom in"));
+    if (m_btnZoomOut) m_btnZoomOut->setText(tr("Zoom out"));
+    if (m_btnZoom100) m_btnZoom100->setText(tr("100%"));
+
+    // Checkboxes
+    if (chkRuler) chkRuler->setText(tr("Ruler"));
+    if (chkStatusBar) chkStatusBar->setText(tr("Status bar"));
+
+    // Settings
+    if (m_lblWordWrap) m_lblWordWrap->setText(tr("Word wrap:"));
+    if (m_lblUnits) m_lblUnits->setText(tr("Measurement units:"));
+    if (m_lblLanguage) m_lblLanguage->setText(tr("Language:"));
+
+    if (cbWordWrap) {
+        int wrapIdx = cbWordWrap->currentIndex();
+        cbWordWrap->blockSignals(true);
+        cbWordWrap->clear();
+        cbWordWrap->addItem(tr("No wrap"), static_cast<int>(WrapMode::NoWrap));
+        cbWordWrap->addItem(tr("Wrap to window"), static_cast<int>(WrapMode::WrapToWindow));
+        cbWordWrap->addItem(tr("Wrap to ruler"), static_cast<int>(WrapMode::WrapToRuler));
+        cbWordWrap->setCurrentIndex(wrapIdx >= 0 ? wrapIdx : 2);
+        cbWordWrap->blockSignals(false);
+    }
+
+    if (cbUnits) {
+        int unitIdx = cbUnits->currentIndex();
+        cbUnits->blockSignals(true);
+        cbUnits->clear();
+        cbUnits->addItem(tr("Inches"), static_cast<int>(UnitType::Inches));
+        cbUnits->addItem(tr("Centimeters"), static_cast<int>(UnitType::Centimeters));
+        cbUnits->addItem(tr("Points"), static_cast<int>(UnitType::Points));
+        cbUnits->addItem(tr("Picas"), static_cast<int>(UnitType::Picas));
+        cbUnits->setCurrentIndex(unitIdx >= 0 ? unitIdx : 1);
+        cbUnits->blockSignals(false);
+    }
+
+    if (cbLanguage) {
+        QString curLang = TranslationManager::instance().currentLanguage();
+        for (int i = 0; i < cbLanguage->count(); ++i) {
+            if (cbLanguage->itemData(i).toString() == curLang) {
+                cbLanguage->blockSignals(true);
+                cbLanguage->setCurrentIndex(i);
+                cbLanguage->blockSignals(false);
+                break;
+            }
+        }
+    }
+}
+
+void RibbonBar::onFileMenuClicked() {
+    if (m_fileMenu) {
+        m_fileMenu->exec(m_btnFile->mapToGlobal(QPoint(0, m_btnFile->height())));
+    }
+}
+
+void RibbonBar::onFontColorClicked() {
+    QColor color = QColorDialog::getColor(Qt::black, this, tr("Text color"));
+    if (color.isValid()) {
+        emit fontColorSelected(color);
+    }
+}
+
+void RibbonBar::onHighlightColorClicked() {
+    QColor color = QColorDialog::getColor(Qt::yellow, this, tr("Text highlight color"));
+    if (color.isValid()) {
+        emit highlightColorSelected(color);
+    }
+}
+
 void RibbonBar::updateFormattingState(const QTextCharFormat &charFmt, const QTextBlockFormat &blockFmt) {
+    QFont font = charFmt.font();
+    cbFontFamily->blockSignals(true);
+    cbFontFamily->setCurrentText(font.family());
+    cbFontFamily->blockSignals(false);
+
+    cbFontSize->blockSignals(true);
+    int ptSize = qRound(charFmt.fontPointSize());
+    if (ptSize > 0) {
+        cbFontSize->setCurrentText(QString::number(ptSize));
+    }
+    cbFontSize->blockSignals(false);
+
     actBold->blockSignals(true);
-    actBold->setChecked(charFmt.fontWeight() > QFont::Normal);
+    actBold->setChecked(charFmt.fontWeight() >= QFont::Bold);
     actBold->blockSignals(false);
 
     actItalic->blockSignals(true);
@@ -576,30 +796,16 @@ void RibbonBar::updateFormattingState(const QTextCharFormat &charFmt, const QTex
     actSuperscript->setChecked(charFmt.verticalAlignment() == QTextCharFormat::AlignSuperScript);
     actSuperscript->blockSignals(false);
 
-    cbFontFamily->blockSignals(true);
-    QStringList fams = charFmt.fontFamilies().toStringList();
-    if (!fams.isEmpty()) {
-        cbFontFamily->setCurrentText(fams.first());
-    }
-    cbFontFamily->blockSignals(false);
-
-    cbFontSize->blockSignals(true);
-    if (charFmt.fontPointSize() > 0) {
-        cbFontSize->setCurrentText(QString::number(static_cast<int>(charFmt.fontPointSize() + 0.5)));
-    }
-    cbFontSize->blockSignals(false);
-
-    // Alignment state
     Qt::Alignment align = blockFmt.alignment();
     actAlignLeft->blockSignals(true);
     actAlignCenter->blockSignals(true);
     actAlignRight->blockSignals(true);
     actAlignJustify->blockSignals(true);
 
-    if (align & Qt::AlignRight) actAlignRight->setChecked(true);
-    else if (align & Qt::AlignHCenter) actAlignCenter->setChecked(true);
-    else if (align & Qt::AlignJustify) actAlignJustify->setChecked(true);
-    else actAlignLeft->setChecked(true);
+    actAlignLeft->setChecked(align & Qt::AlignLeft);
+    actAlignCenter->setChecked(align & Qt::AlignHCenter);
+    actAlignRight->setChecked(align & Qt::AlignRight);
+    actAlignJustify->setChecked(align & Qt::AlignJustify);
 
     actAlignLeft->blockSignals(false);
     actAlignCenter->blockSignals(false);
@@ -608,40 +814,17 @@ void RibbonBar::updateFormattingState(const QTextCharFormat &charFmt, const QTex
 }
 
 void RibbonBar::updateRecentFilesMenu(const QStringList &files) {
+    if (!m_recentMenu) return;
     m_recentMenu->clear();
-    if (files.isEmpty()) {
-        QAction *emptyAct = m_recentMenu->addAction(QStringLiteral("(Nessun documento recente)"));
-        emptyAct->setEnabled(false);
-        return;
-    }
-
     for (int i = 0; i < files.size(); ++i) {
-        QString f = files[i];
-        QFileInfo fi(f);
+        const QString &file = files.at(i);
+        QFileInfo fi(file);
         QString label = QStringLiteral("&%1 %2").arg(i + 1).arg(fi.fileName());
         QAction *act = m_recentMenu->addAction(label);
-        act->setToolTip(f);
-        connect(act, &QAction::triggered, this, [this, f]() {
-            emit recentFileTriggered(f);
+        act->setData(file);
+        connect(act, &QAction::triggered, this, [this, file]() {
+            emit recentFileTriggered(file);
         });
-    }
-}
-
-void RibbonBar::onFileMenuClicked() {
-    m_fileMenu->exec(m_btnFile->mapToGlobal(QPoint(0, m_btnFile->height())));
-}
-
-void RibbonBar::onFontColorClicked() {
-    QColor c = QColorDialog::getColor(Qt::black, this, QStringLiteral("Select Text Color"));
-    if (c.isValid()) {
-        emit fontColorSelected(c);
-    }
-}
-
-void RibbonBar::onHighlightColorClicked() {
-    QColor c = QColorDialog::getColor(Qt::yellow, this, QStringLiteral("Select Highlight Color"));
-    if (c.isValid()) {
-        emit highlightColorSelected(c);
     }
 }
 

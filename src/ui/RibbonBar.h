@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QLabel>
 #include <QTabWidget>
 #include <QToolButton>
 #include <QComboBox>
@@ -110,14 +111,17 @@ public:
     // View Tab - Settings
     QComboBox *cbWordWrap;
     QComboBox *cbUnits;
+    QComboBox *cbLanguage;
 
     void updateFormattingState(const QTextCharFormat &charFmt, const QTextBlockFormat &blockFmt);
     void updateRecentFilesMenu(const QStringList &files);
+    void retranslateUi();
 
 signals:
     void recentFileTriggered(const QString &filePath);
     void fontColorSelected(const QColor &color);
     void highlightColorSelected(const QColor &color);
+    void languageChanged(const QString &langCode);
 
 private slots:
     void onFileMenuClicked();
@@ -129,7 +133,7 @@ private:
     void setupFileMenu();
     void setupHomeTab();
     void setupViewTab();
-    QWidget *createRibbonGroup(const QString &title, QLayout *contentLayout);
+    QWidget *createRibbonGroup(const QString &title, QLayout *contentLayout, QLabel **outLabel = nullptr);
     QToolButton *createLargeButton(QAction *action, const QString &iconPath, const QString &text);
     QToolButton *createSmallButton(QAction *action, const QString &iconPath, const QString &tooltip = QString());
 
@@ -139,6 +143,34 @@ private:
     QMenu *m_recentMenu;
     QWidget *m_homeTab;
     QWidget *m_viewTab;
+
+    // Retranslate UI labels
+    QLabel *m_lblWordWrap;
+    QLabel *m_lblUnits;
+    QLabel *m_lblLanguage;
+
+    QLabel *m_lblGroupClipboard;
+    QLabel *m_lblGroupFont;
+    QLabel *m_lblGroupPara;
+    QLabel *m_lblGroupInsert;
+    QLabel *m_lblGroupEdit;
+    QLabel *m_lblGroupZoom;
+    QLabel *m_lblGroupShowHide;
+    QLabel *m_lblGroupSettings;
+
+    QToolButton *m_btnPaste;
+    QToolButton *m_btnCut;
+    QToolButton *m_btnCopy;
+    QToolButton *m_btnPic;
+    QToolButton *m_btnPaint;
+    QToolButton *m_btnDate;
+    QToolButton *m_btnObj;
+    QToolButton *m_btnFind;
+    QToolButton *m_btnReplace;
+    QToolButton *m_btnSelectAll;
+    QToolButton *m_btnZoomIn;
+    QToolButton *m_btnZoomOut;
+    QToolButton *m_btnZoom100;
 };
 
 } // namespace OpenWordPad

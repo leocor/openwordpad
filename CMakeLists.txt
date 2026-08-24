@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(OpenWordPad VERSION 1.2.3 LANGUAGES C CXX)
+project(OpenWordPad VERSION 1.3.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,6 +15,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Widgets
     PrintSupport
     Svg
+    Test
 )
 
 set(SOURCES
@@ -36,6 +37,8 @@ set(SOURCES
     src/core/DocxEngine.cpp
     src/core/DocumentManager.h
     src/core/DocumentManager.cpp
+    src/core/TranslationManager.h
+    src/core/TranslationManager.cpp
     src/ui/RibbonBar.h
     src/ui/RibbonBar.cpp
     src/ui/RulerWidget.h
@@ -226,3 +229,22 @@ target_include_directories(verify_debugger_workflow PRIVATE
 )
 
 add_test(NAME DebuggerWorkflowTests COMMAND verify_debugger_workflow)
+
+add_executable(test_translations
+    tests/test_translations.cpp
+    src/core/TranslationManager.h
+    src/core/TranslationManager.cpp
+    resources/resources.qrc
+)
+
+target_link_libraries(test_translations PRIVATE
+    Qt6::Core
+    Qt6::Test
+)
+
+target_include_directories(test_translations PRIVATE
+    src
+    src/core
+)
+
+add_test(NAME TranslationTests COMMAND test_translations)

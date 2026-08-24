@@ -1,5 +1,9 @@
 build/
 build-*/
+bin/
+lib/
+*.log
+*.zip
 .cache/
 *.user
 *.kdev4

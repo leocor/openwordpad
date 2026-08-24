@@ -52,5 +52,26 @@
         <file>icons/wordwrap.svg</file>
         <file>icons/units.svg</file>
         <file>icons/arrow_down.svg</file>
+        <file>translations/openwordpad_it.qm</file>
+        <file>translations/openwordpad_es.qm</file>
+        <file>translations/openwordpad_fr.qm</file>
+        <file>translations/openwordpad_de.qm</file>
+        <file>translations/openwordpad_pt.qm</file>
+        <file>translations/openwordpad_ru.qm</file>
+        <file>translations/openwordpad_zh_CN.qm</file>
+        <file>translations/openwordpad_zh_TW.qm</file>
+        <file>translations/openwordpad_ja.qm</file>
+        <file>translations/openwordpad_ko.qm</file>
+        <file>translations/openwordpad_ar.qm</file>
+        <file>translations/openwordpad_hi.qm</file>
+        <file>translations/openwordpad_nl.qm</file>
+        <file>translations/openwordpad_pl.qm</file>
+        <file>translations/openwordpad_tr.qm</file>
+        <file>translations/openwordpad_sv.qm</file>
+        <file>translations/openwordpad_el.qm</file>
+        <file>translations/openwordpad_cs.qm</file>
+        <file>translations/openwordpad_hu.qm</file>
+        <file>translations/openwordpad_uk.qm</file>
+        <file>translations/openwordpad_id.qm</file>
     </qresource>
 </RCC>

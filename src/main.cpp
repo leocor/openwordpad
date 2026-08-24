@@ -2,6 +2,7 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 #include <QStyleFactory>
+#include "core/TranslationManager.h"
 #include "ui/MainWindow.h"
 
 int main(int argc, char *argv[]) {
@@ -12,8 +13,11 @@ int main(int argc, char *argv[]) {
 #ifdef OPENWORDPAD_VERSION
     app.setApplicationVersion(QStringLiteral(OPENWORDPAD_VERSION));
 #else
-    app.setApplicationVersion(QStringLiteral("1.2.0"));
+    app.setApplicationVersion(QStringLiteral("1.2.3"));
 #endif
+
+    // Initialize translation matching system locale or saved settings
+    OpenWordPad::TranslationManager::instance().initLanguage();
 
     // Modern clean style
     app.setStyle(QStyleFactory::create(QStringLiteral("Fusion")));

@@ -66,6 +66,7 @@ private slots:
     void onStatusBarToggled(bool visible);
     void onWordWrapChanged(int index);
     void onUnitsChanged(int index);
+    void onLanguageChanged(const QString &langCode);
 
     // Ruler drag actions
     void onRulerLeftMarginChanged(double inches);
@@ -73,6 +74,7 @@ private slots:
 
     // Document state updates
     void updateTitle();
+    void retranslateUi();
     void onCursorPositionChanged(int line, int col, int charCount);
     void onDocumentModifiedChanged(bool modified);
     void onParagraphDialog();

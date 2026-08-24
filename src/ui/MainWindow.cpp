@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "../core/TranslationManager.h"
 #include "dialogs/AboutDialog.h"
 #include "dialogs/PageSetupDialog.h"
 #include "dialogs/ParagraphDialog.h"
@@ -65,7 +66,7 @@ void MainWindow::setupUI() {
 
     // 4. Status Bar
     auto sb = statusBar();
-    m_statusLabel = new QLabel(QStringLiteral("Ready"), sb);
+    m_statusLabel = new QLabel(tr("Ready"), sb);
     m_posLabel = new QLabel(QStringLiteral("Ln 1, Col 1"), sb);
     m_posLabel->setMinimumWidth(100);
     m_zoomWidget = new ZoomSliderWidget(sb);
@@ -185,6 +186,7 @@ void MainWindow::setupConnections() {
     connect(m_ribbon->chkStatusBar, &QCheckBox::toggled, this, &MainWindow::onStatusBarToggled);
     connect(m_ribbon->cbWordWrap, &QComboBox::currentIndexChanged, this, &MainWindow::onWordWrapChanged);
     connect(m_ribbon->cbUnits, &QComboBox::currentIndexChanged, this, &MainWindow::onUnitsChanged);
+    connect(m_ribbon, &RibbonBar::languageChanged, this, &MainWindow::onLanguageChanged);
 
     // Ruler events
     connect(m_ruler, &RulerWidget::leftMarginChanged, this, &MainWindow::onRulerLeftMarginChanged);
@@ -206,6 +208,17 @@ void MainWindow::setupConnections() {
     m_editor->document()->setModified(false);
     updateTitle();
     m_ribbon->updateRecentFilesMenu(m_docManager->recentFiles());
+}
+
+void MainWindow::onLanguageChanged(const QString &langCode) {
+    TranslationManager::instance().setLanguage(langCode);
+    retranslateUi();
+}
+
+void MainWindow::retranslateUi() {
+    m_ribbon->retranslateUi();
+    m_statusLabel->setText(tr("Ready"));
+    updateTitle();
 }
 
 void MainWindow::updateTitle() {
@@ -244,7 +257,7 @@ bool MainWindow::maybeSave() {
     }
 
     auto ret = QMessageBox::warning(this, QStringLiteral("OpenWordPad"),
-        QStringLiteral("Salvare le modifiche a %1?").arg(m_docManager->documentTitle()),
+        tr("Do you want to save changes to \"%1\"?").arg(m_docManager->documentTitle()),
         QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
 
     if (ret == QMessageBox::Save) {
