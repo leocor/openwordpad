@@ -44,7 +44,11 @@ jobs:
 
       - name: Run Test Suite
         shell: pwsh
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: |
+          $env:PATH = "C:\Qt\6.7.2\msvc2019_64\bin;$env:PATH"
+          $env:QT_PLUGIN_PATH = "C:\Qt\6.7.2\msvc2019_64\plugins"
           ctest --test-dir build --output-on-failure -C Release
 
       - name: Prepare Windows Distribution Package
