@@ -23,12 +23,12 @@ jobs:
         uses: ninja-build/setup-ninja@v1
 
       - name: Install Qt 6
-        uses: jurplel/install-qt-action@v4
+        uses: jurplel/install-qt-action@v3
         with:
           version: '6.7.2'
           host: 'windows'
           target: 'desktop'
-          arch: 'win64_msvc2022_64'
+          arch: 'win64_msvc2019_64'
           modules: 'qtsvg'
 
       - name: Configure CMake
