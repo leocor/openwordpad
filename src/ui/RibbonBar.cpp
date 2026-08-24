@@ -163,7 +163,7 @@ void RibbonBar::setupHomeTab() {
     clipLayout->setSpacing(4);
     
     auto btnPaste = createLargeButton(actPaste, QStringLiteral(":/icons/paste.svg"), QStringLiteral("Incolla"));
-    btnPaste->setFixedSize(64, 66);
+    btnPaste->setFixedSize(68, 66);
     QMenu *pasteMenu = new QMenu(this);
     pasteMenu->addAction(actPaste);
     pasteMenu->addAction(actPasteSpecial);
@@ -379,7 +379,7 @@ void RibbonBar::setupHomeTab() {
     actResizePicture = new QAction(QIcon(QStringLiteral(":/icons/picture.svg")), QStringLiteral("Ridimensiona immagine"), this);
 
     auto btnPic = createLargeButton(actInsertPicture, QStringLiteral(":/icons/picture.svg"), QStringLiteral("Immagine"));
-    btnPic->setFixedSize(70, 66);
+    btnPic->setFixedSize(82, 66);
     QMenu *picMenu = new QMenu(this);
     picMenu->addAction(actInsertPicture);
     picMenu->addAction(actChangePicture);
@@ -390,7 +390,7 @@ void RibbonBar::setupHomeTab() {
 
     actPaintDrawing = new QAction(QIcon(QStringLiteral(":/icons/paint.svg")), QStringLiteral("Disegno\ndi Paint"), this);
     auto btnPaint = createLargeButton(actPaintDrawing, QStringLiteral(":/icons/paint.svg"), QStringLiteral("Disegno\ndi Paint"));
-    btnPaint->setFixedSize(74, 66);
+    btnPaint->setFixedSize(76, 66);
     insertLayout->addWidget(btnPaint);
 
     actDateTime = new QAction(QIcon(QStringLiteral(":/icons/datetime.svg")), QStringLiteral("Data\ne ora"), this);
@@ -400,7 +400,7 @@ void RibbonBar::setupHomeTab() {
 
     actInsertObject = new QAction(QIcon(QStringLiteral(":/icons/object.svg")), QStringLiteral("Inserisci\noggetto"), this);
     auto btnObj = createLargeButton(actInsertObject, QStringLiteral(":/icons/object.svg"), QStringLiteral("Inserisci\noggetto"));
-    btnObj->setFixedSize(74, 66);
+    btnObj->setFixedSize(78, 66);
     insertLayout->addWidget(btnObj);
 
     homeLayout->addWidget(createRibbonGroup(QStringLiteral("Inserisci"), insertLayout));

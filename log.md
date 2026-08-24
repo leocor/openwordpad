@@ -45,13 +45,9 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
-### [2026-08-24] - Version 1.1.8 & Vector Downward Chevron Arrows & Ribbon Padding Polish
-- [x] **Replaced CSS borders with Crisp Vector SVG Arrows**:
-  - Created `resources/icons/arrow_down.svg` with native Windows-style downward chevron.
-  - Bound `arrow_down.svg` to `QToolButton::menu-arrow` and `QComboBox::down-arrow`.
-  - Replaced the black square artifact with authentic downward arrow chevrons on all split buttons and dropdown menus.
-- [x] **Generous Horizontal & Vertical Ribbon Button Padding**:
-  - Increased button widths (`Incolla`: 64px, `Immagine`: 70px, `Disegno di Paint`: 74px, `Data e ora`: 68px, `Inserisci oggetto`: 74px).
-  - Increased group margins to 6px and spacing to 6px, completely preventing button labels and group titles from overflowing into adjacent elements or border separators.
+### [2026-08-24] - Version 1.1.9 & Immagine Split Button Layout Tuning
+- [x] **Eliminated Immagine Split Button Divider Overlap**:
+  - Expanded `Immagine` split button width from 70px to 82px, ensuring ample 8px horizontal padding between the word "Immagine" and the vertical dropdown separator.
+  - Expanded `Incolla` to 68px, `Disegno di Paint` to 76px, and `Inserisci oggetto` to 78px for generous spacing across all DPI scalings.
 - [x] **100% CTest Suite Validation**:
   - All 4 test suites passed with zero errors.
