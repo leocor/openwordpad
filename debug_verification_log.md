@@ -23,7 +23,7 @@
 |---|---|---|---|---|
 | Rich Text Format (.rtf) | `documento_completo.rtf` (15668 B) | ✅ OK | ✅ Riaperto con successo | Contenuto: 886 caratteri | 
 | Office Open XML (.docx) | `documento_completo.docx` (8912 B) | ✅ OK | ✅ Riaperto con successo | Contenuto: 886 caratteri | 
-| OpenDocument Text (.odt) | `documento_completo.odt` (8430 B) | ✅ OK | ✅ Riaperto con successo | Contenuto: 8138 caratteri | 
+| OpenDocument Text (.odt) | `documento_completo.odt` (8433 B) | ✅ OK | ✅ Riaperto con successo | Contenuto: 8141 caratteri | 
 | HTML Rich Text (.html) | `documento_completo.html` (13321 B) | ✅ OK | ✅ Riaperto con successo | Contenuto: 885 caratteri | 
 | Plain Text (.txt) | `documento_completo.txt` (955 B) | ✅ OK | ✅ Riaperto con successo | Contenuto: 885 caratteri | 
 | PDF Document (.pdf) | `documento_completo.pdf` (61012 B) | ✅ OK | N/A (Esportazione) | PDF vettoriale generato | 

@@ -45,6 +45,13 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
+### [2026-08-24] - Version 1.3.1 - Windows User Session & Multi-layer Locale Detection Fix
+- [x] **Windows Server / Multi-User Session Display Language Resolution**:
+  - Integrated native Windows Win32 API `GetUserDefaultUILanguage()` and `QLocale::system().uiLanguages()` checks.
+  - Automatically respects user session language packs on Windows Server / Windows 10/11 even when the underlying server install image defaults to English.
+- [x] **100% CTest Suite Validation**:
+  - All 5 test suites passed 100%.
+
 ### [2026-08-24] - Version 1.3.0 - Full Multilingual Internationalization (22 Languages)
 - [x] **Native 22-Language Internationalization (i18n)**:
   - Integrated `TranslationManager` with automatic system locale detection (`QLocale::system()`) and persistent user preference in `QSettings`.
