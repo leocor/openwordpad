@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Wooden artist palette -->
+  <path d="M16 4 C9 4 4 9 4 16 C4 23 10 28 17 28 C20 28 22 26 22 24 C22 22 21 21 21 20 C21 19 22 18 24 18 C27 18 28 15 28 12 C28 7 23 4 16 4 Z" fill="#e0a96d" stroke="#8d5618" stroke-width="1.2"/>
+  <circle cx="10" cy="11" r="2" fill="#e53935"/>
+  <circle cx="16" cy="9" r="2" fill="#fdd835"/>
+  <circle cx="21" cy="13" r="2" fill="#43a047"/>
+  <circle cx="11" cy="17" r="2" fill="#1e88e5"/>
+  <circle cx="18" cy="24" r="2.5" fill="#ffffff" stroke="#8d5618"/>
+  <!-- Brush -->
+  <path d="M26 6 L18 19 L20 21 L28 8 Z" fill="#5d4037"/>
+  <path d="M27 5 L29 7 L28 8 L26 6 Z" fill="#d32f2f"/>
+</svg>

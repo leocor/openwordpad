@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+      <path d="M3 3h12l3 3v13a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" fill="#3182ce" stroke="#2b6cb0" stroke-width="1.2"/>
+      <rect x="6" y="3" width="7" height="5" fill="#fff"/>
+      <rect x="5" y="12" width="10" height="7" fill="#fff"/>
+      <!-- Pencil overlay -->
+      <path d="M15 11l5-5 3 3-5 5z" fill="#ecc94b" stroke="#d69e2e" stroke-width="0.8"/>
+      <path d="M14 15l1-4 4 1z" fill="#718096"/>
+    </svg>

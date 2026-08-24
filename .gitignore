@@ -1,0 +1,8 @@
+build/
+build-*/
+.cache/
+*.user
+*.kdev4
+.vscode/
+.idea/
+documenti generati/

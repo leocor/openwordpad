@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=OpenWordPad
+GenericName=Word Processor
+Comment=A faithful, full-featured Microsoft WordPad recreation in Qt6 & C++
+Exec=openwordpad %F
+Icon=openwordpad
+Terminal=false
+Type=Application
+Categories=Office;WordProcessor;TextEditor;Qt;
+MimeType=application/rtf;text/rtf;application/vnd.oasis.opendocument.text;application/vnd.openxmlformats-officedocument.wordprocessingml.document;text/plain;text/html;
+Keywords=wordpad;word;processor;rtf;editor;document;

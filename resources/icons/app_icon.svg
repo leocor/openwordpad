@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="pageGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="90%" stop-color="#f0f4f8"/>
+      <stop offset="100%" stop-color="#d9e2ec"/>
+    </linearGradient>
+    <linearGradient id="foldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#bcccdc"/>
+      <stop offset="100%" stop-color="#9fb3c8"/>
+    </linearGradient>
+    <linearGradient id="penBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f39c12"/>
+      <stop offset="50%" stop-color="#d35400"/>
+      <stop offset="100%" stop-color="#962d00"/>
+    </linearGradient>
+    <linearGradient id="penNib" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f1c40f"/>
+      <stop offset="100%" stop-color="#b7950b"/>
+    </linearGradient>
+    <linearGradient id="letterAGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0078d7"/>
+      <stop offset="100%" stop-color="#004e8c"/>
+    </linearGradient>
+    <filter id="dropShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="3" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Shadow and Document Page -->
+  <g filter="url(#dropShadow)">
+    <path d="M 24 16 L 86 16 L 104 34 L 104 112 C 104 115 102 118 98 118 L 24 118 C 20 118 18 115 18 112 L 18 22 C 18 18 20 16 24 16 Z" 
+          fill="url(#pageGrad)" stroke="#627d98" stroke-width="1.5"/>
+    <!-- Folded Corner -->
+    <path d="M 86 16 L 86 34 L 104 34 Z" fill="url(#foldGrad)" stroke="#627d98" stroke-width="1.2"/>
+  </g>
+
+  <!-- Ruled Blue Lines on Notepad -->
+  <line x1="28" y1="42" x2="68" y2="42" stroke="#90cdf4" stroke-width="3" stroke-linecap="round"/>
+  <line x1="28" y1="56" x2="62" y2="56" stroke="#90cdf4" stroke-width="3" stroke-linecap="round"/>
+  <line x1="28" y1="70" x2="58" y2="70" stroke="#90cdf4" stroke-width="3" stroke-linecap="round"/>
+  <line x1="28" y1="84" x2="94" y2="84" stroke="#90cdf4" stroke-width="3" stroke-linecap="round"/>
+  <line x1="28" y1="98" x2="88" y2="98" stroke="#90cdf4" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Iconic Bold Letter "A" -->
+  <text x="32" y="78" font-family="'Segoe UI', 'DejaVu Sans', sans-serif" font-weight="900" font-size="46" fill="url(#letterAGrad)">A</text>
+
+  <!-- WordPad Stylus / Fountain Pen -->
+  <g transform="rotate(-35 88 78)" filter="url(#dropShadow)">
+    <!-- Pen Barrel -->
+    <rect x="74" y="24" width="14" height="68" rx="4" fill="url(#penBody)" stroke="#78350f" stroke-width="1"/>
+    <!-- Gold Trim Ring -->
+    <rect x="74" y="60" width="14" height="4" fill="#f1c40f" stroke="#b7950b" stroke-width="0.5"/>
+    <rect x="74" y="90" width="14" height="3" fill="#f1c40f" stroke="#b7950b" stroke-width="0.5"/>
+    <!-- Pen Grip -->
+    <path d="M 74 93 L 88 93 L 85 106 L 77 106 Z" fill="#2d3748"/>
+    <!-- Nib -->
+    <path d="M 77 106 L 85 106 L 81 120 Z" fill="url(#penNib)" stroke="#78350f" stroke-width="0.6"/>
+    <circle cx="81" cy="111" r="1" fill="#78350f"/>
+    <line x1="81" y1="111" x2="81" y2="120" stroke="#78350f" stroke-width="0.8"/>
+  </g>
+</svg>

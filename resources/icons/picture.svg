@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect x="4" y="4" width="24" height="24" rx="3" fill="#29b6f6" stroke="#0288d1" stroke-width="1.5"/>
+  <!-- Sun -->
+  <circle cx="10" cy="11" r="3" fill="#ffee58"/>
+  <!-- Mountains -->
+  <path d="M4 25 L12 15 L18 21 L22 17 L28 25 Z" fill="#66bb6a"/>
+  <path d="M12 25 L18 18 L28 25 Z" fill="#43a047"/>
+</svg>
