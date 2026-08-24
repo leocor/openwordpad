@@ -438,20 +438,27 @@ void RibbonBar::setupHomeTab() {
 
 void RibbonBar::setupViewTab() {
     auto viewLayout = new QHBoxLayout(m_viewTab);
-    viewLayout->setContentsMargins(4, 2, 4, 2);
-    viewLayout->setSpacing(4);
+    viewLayout->setContentsMargins(6, 3, 6, 3);
+    viewLayout->setSpacing(6);
 
     // 1. Zoom Group
     auto zoomLayout = new QHBoxLayout();
     zoomLayout->setContentsMargins(0, 0, 0, 0);
-    zoomLayout->setSpacing(2);
+    zoomLayout->setSpacing(4);
     actZoomIn = new QAction(QIcon(QStringLiteral(":/icons/zoom_in.svg")), QStringLiteral("Ingrandisci"), this);
     actZoomOut = new QAction(QIcon(QStringLiteral(":/icons/zoom_out.svg")), QStringLiteral("Riduci"), this);
     actZoom100 = new QAction(QIcon(QStringLiteral(":/icons/zoom_100.svg")), QStringLiteral("100%"), this);
 
-    zoomLayout->addWidget(createLargeButton(actZoomIn, QStringLiteral(":/icons/zoom_in.svg"), QStringLiteral("Ingrandisci")));
-    zoomLayout->addWidget(createLargeButton(actZoomOut, QStringLiteral(":/icons/zoom_out.svg"), QStringLiteral("Riduci")));
-    zoomLayout->addWidget(createLargeButton(actZoom100, QStringLiteral(":/icons/zoom_100.svg"), QStringLiteral("100%")));
+    auto btnZoomIn = createLargeButton(actZoomIn, QStringLiteral(":/icons/zoom_in.svg"), QStringLiteral("Ingrandisci"));
+    btnZoomIn->setFixedSize(68, 66);
+    auto btnZoomOut = createLargeButton(actZoomOut, QStringLiteral(":/icons/zoom_out.svg"), QStringLiteral("Riduci"));
+    btnZoomOut->setFixedSize(68, 66);
+    auto btnZoom100 = createLargeButton(actZoom100, QStringLiteral(":/icons/zoom_100.svg"), QStringLiteral("100%"));
+    btnZoom100->setFixedSize(68, 66);
+
+    zoomLayout->addWidget(btnZoomIn);
+    zoomLayout->addWidget(btnZoomOut);
+    zoomLayout->addWidget(btnZoom100);
     viewLayout->addWidget(createRibbonGroup(QStringLiteral("Zoom"), zoomLayout));
 
     // 2. Show or Hide Group (Mostra o nascondi)

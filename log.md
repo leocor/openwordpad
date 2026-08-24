@@ -45,6 +45,13 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
+### [2026-08-24] - Version 1.2.3 - View Tab 100% Zoom Button Padding Polish
+- [x] **Eliminated 100% Zoom Button Label Border Clipping**:
+  - Expanded `100%`, `Ingrandisci`, and `Riduci` buttons in the View tab to fixed size `68x66px`.
+  - Expanded `viewLayout` margins to 6px and spacing to 6px, completely preventing the "100%" text from clipping against the Zoom group border separator.
+- [x] **100% CTest Suite Validation**:
+  - All 4 test suites passed with zero errors.
+
 ### [2026-08-24] - Version 1.2.2 - Standalone Universal Linux AppImage Pipeline
 - [x] **Full Linux Standalone AppImage (`.AppImage`) Deployment**:
   - Integrated AppDir packaging with `appimagetool` in GitHub Actions.
