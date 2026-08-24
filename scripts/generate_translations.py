@@ -501,7 +501,37 @@ def generate_ts_files():
     out_dir = "/home/leo/src/openwordpad/resources/translations"
     os.makedirs(out_dir, exist_ok=True)
     
-    contexts = ["RibbonBar", "MainWindow", "OpenWordPad::MainWindow", "OpenWordPad::AboutDialog", "AboutDialog", "FindReplaceDialog", "ParagraphDialog", "PageSetupDialog", "DateTimeDialog", "ImageResizeDialog", "PaintDrawingDialog"]
+    contexts = [
+        "OpenWordPad::RibbonBar",
+        "OpenWordPad::MainWindow",
+        "OpenWordPad::DocumentEditor",
+        "OpenWordPad::RulerWidget",
+        "OpenWordPad::ZoomSliderWidget",
+        "OpenWordPad::AboutDialog",
+        "OpenWordPad::FindReplaceDialog",
+        "OpenWordPad::ParagraphDialog",
+        "OpenWordPad::PageSetupDialog",
+        "OpenWordPad::DateTimeDialog",
+        "OpenWordPad::ImageResizeDialog",
+        "OpenWordPad::PaintDrawingDialog",
+        "OpenWordPad::DocumentManager",
+        "OpenWordPad::TranslationManager",
+        "RibbonBar",
+        "MainWindow",
+        "DocumentEditor",
+        "RulerWidget",
+        "ZoomSliderWidget",
+        "AboutDialog",
+        "FindReplaceDialog",
+        "ParagraphDialog",
+        "PageSetupDialog",
+        "DateTimeDialog",
+        "ImageResizeDialog",
+        "PaintDrawingDialog",
+        "DocumentManager",
+        "TranslationManager",
+        "QObject"
+    ]
 
     for lang_code, lang_name in LANGUAGES.items():
         if lang_code == "en":

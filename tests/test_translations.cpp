@@ -28,6 +28,30 @@ private slots:
             }
         }
     }
+
+    void testItalianTranslations() {
+        auto &mgr = OpenWordPad::TranslationManager::instance();
+        mgr.setLanguage("it");
+
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::RibbonBar", "Home"), QString("Home"));
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::RibbonBar", "View"), QString("Visualizza"));
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::RibbonBar", "Paste"), QString("Incolla"));
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::RibbonBar", "Bold"), QString("Grassetto"));
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::RibbonBar", "Italic"), QString("Corsivo"));
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::RibbonBar", "Underline"), QString("Sottolineato"));
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::MainWindow", "Ready"), QString("Pronto"));
+    }
+
+    void testSpanishTranslations() {
+        auto &mgr = OpenWordPad::TranslationManager::instance();
+        mgr.setLanguage("es");
+
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::RibbonBar", "Home"), QString("Inicio"));
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::RibbonBar", "View"), QString("Ver"));
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::RibbonBar", "Paste"), QString("Pegar"));
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::RibbonBar", "Bold"), QString("Negrita"));
+        QCOMPARE(QCoreApplication::translate("OpenWordPad::MainWindow", "Ready"), QString("Listo"));
+    }
 };
 
 QTEST_MAIN(TestTranslations)
