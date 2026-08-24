@@ -17,9 +17,19 @@ int main(int argc, char *argv[]) {
     std::cout << "   Stress-Testing 100 Sample Documents for Zero Crashes  " << std::endl;
     std::cout << "=========================================================" << std::endl;
 
-    QDir dir(QStringLiteral("/home/leo/src/openwordpad/documenti di esempio"));
+    QString dirPath = QDir::currentPath() + QStringLiteral("/documenti di esempio");
+    if (!QDir(dirPath).exists()) {
+        dirPath = QDir::currentPath() + QStringLiteral("/../documenti di esempio");
+    }
+    if (!QDir(dirPath).exists()) {
+        dirPath = QCoreApplication::applicationDirPath() + QStringLiteral("/../../documenti di esempio");
+    }
+    if (!QDir(dirPath).exists()) {
+        dirPath = QStringLiteral("/home/leo/src/openwordpad/documenti di esempio");
+    }
+    QDir dir(dirPath);
     if (!dir.exists()) {
-        std::cerr << "Error: Directory 'documenti di esempio' does not exist!" << std::endl;
+        std::cerr << "Error: Directory 'documenti di esempio' does not exist at: " << dirPath.toStdString() << std::endl;
         return 1;
     }
 

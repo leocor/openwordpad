@@ -22,7 +22,16 @@ int main(int argc, char *argv[]) {
     std::cout << "  OpenWordPad Full Debugger QA Workflow & Verification   " << std::endl;
     std::cout << "=========================================================" << std::endl;
 
-    QString baseDir = QStringLiteral("/home/leo/src/openwordpad");
+    QString baseDir = QDir::currentPath();
+    if (!QDir(baseDir + QStringLiteral("/documenti di esempio")).exists()) {
+        baseDir = QDir::currentPath() + QStringLiteral("/..");
+    }
+    if (!QDir(baseDir + QStringLiteral("/documenti di esempio")).exists()) {
+        baseDir = QCoreApplication::applicationDirPath() + QStringLiteral("/../..");
+    }
+    if (!QDir(baseDir + QStringLiteral("/documenti di esempio")).exists()) {
+        baseDir = QStringLiteral("/home/leo/src/openwordpad");
+    }
     QString sampleMathFile = baseDir + QStringLiteral("/documenti di esempio/doc_speciale_simboli_matematici.rtf");
     QString outputDir = baseDir + QStringLiteral("/documenti generati");
 
@@ -181,7 +190,8 @@ int main(int argc, char *argv[]) {
 
     logStream << "\n### Step 6: Risultato QA & Debugger\n- **Tutti i formati generati e riaperti con successo al 100%**.\n- **Zero crash, formattazione mantenuta e immagini/paint incorporati persistiti**.\n";
 
-    std::ofstream outLog("/home/leo/src/openwordpad/debug_verification_log.md");
+    QString logPath = baseDir + QStringLiteral("/debug_verification_log.md");
+    std::ofstream outLog(logPath.toStdString());
     if (outLog.is_open()) {
         outLog << logStream.str();
         outLog.close();
