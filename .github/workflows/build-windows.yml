@@ -25,9 +25,12 @@ jobs:
         shell: pwsh
         run: |
           pip install aqtinstall
-          python -m aqt install-qt windows desktop 6.7.2 win64_msvc2019_64 -m qtsvg
-          echo "QT_ROOT=$((Get-Item .).FullName)\6.7.2\msvc2019_64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          echo "$((Get-Item .).FullName)\6.7.2\msvc2019_64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          $arch = (python -m aqt list-qt windows desktop --arch 6.7.2 | Select-Object -First 1).Trim()
+          Write-Host "Detected Qt Architecture: $arch"
+          python -m aqt install-qt windows desktop 6.7.2 $arch -O C:\Qt -m qtsvg
+          $qtPath = "C:\Qt\6.7.2\$arch"
+          echo "QT_ROOT=$qtPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "$qtPath\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       - name: Configure CMake
         shell: pwsh
