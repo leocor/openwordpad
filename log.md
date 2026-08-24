@@ -45,6 +45,14 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
+### [2026-08-24] - Version 1.2.1 - Linux Standalone AppImage CI/CD Pipeline
+- [x] **Full Linux Standalone AppImage (`.AppImage`) Deployment**:
+  - Integrated `linuxdeploy`, `linuxdeploy-plugin-qt`, and `linuxdeploy-plugin-appimage` in GitHub Actions.
+  - Bundled all Qt6 shared libraries, plugins (`platforms/libqxcb.so`, `imageformats/`, `svg/`, `iconengines/`), translations, and runtimes into a single portable `OpenWordPad-Linux-x86_64.AppImage` (~40-50 MB).
+  - Users on any Linux distro (Ubuntu, Debian, Fedora, Arch, CachyOS, Mint, openSUSE) can now run OpenWordPad immediately without installing Qt6 dependencies.
+- [x] **100% CTest Suite Validation**:
+  - All 4 test suites passed with zero errors.
+
 ### [2026-08-24] - Version 1.2.0 - Centralized Dynamic Versioning & Full License/Doc Sync
 - [x] **Dynamic Single-Source-of-Truth Versioning**:
   - Configured `CMakeLists.txt` with `project(OpenWordPad VERSION 1.2.0)` and passed `OPENWORDPAD_VERSION` compile definition.

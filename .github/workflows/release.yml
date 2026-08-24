@@ -84,7 +84,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake ninja-build build-essential \
-            qt6-base-dev libqt6svg6-dev qt6-image-formats-plugins libgl1-mesa-dev
+            qt6-base-dev qt6-base-dev-tools libqt6svg6-dev qt6-image-formats-plugins libgl1-mesa-dev libfuse2 file wget
 
       - name: Configure CMake
         run: |
@@ -100,20 +100,44 @@ jobs:
         run: |
           ctest --test-dir build --output-on-failure -C Release
 
-      - name: Package Linux Binary Bundle
+      - name: Package Linux Standalone AppImage & Bundle
         run: |
-          mkdir -p dist/OpenWordPad
-          cp build/openwordpad dist/OpenWordPad/
-          cp openwordpad.desktop dist/OpenWordPad/
-          cp run.sh dist/OpenWordPad/
-          chmod +x dist/OpenWordPad/openwordpad dist/OpenWordPad/run.sh
-          tar -czvf OpenWordPad-Linux-x86_64.tar.gz -C dist OpenWordPad
+          # Download linuxdeploy and plugins
+          wget -q https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -O linuxdeploy
+          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage -O linuxdeploy-plugin-qt
+          wget -q https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage -O linuxdeploy-plugin-appimage
+          chmod +x linuxdeploy*
+
+          ./linuxdeploy --appimage-extract > /dev/null 2>&1
+          mv squashfs-root linuxdeploy-root
+          ./linuxdeploy-plugin-qt --appimage-extract > /dev/null 2>&1
+          mv squashfs-root linuxdeploy-plugin-qt-root
+          ./linuxdeploy-plugin-appimage --appimage-extract > /dev/null 2>&1
+          mv squashfs-root linuxdeploy-plugin-appimage-root
+
+          export PATH="$(pwd)/linuxdeploy-root/usr/bin:$(pwd)/linuxdeploy-plugin-qt-root/usr/bin:$(pwd)/linuxdeploy-plugin-appimage-root/usr/bin:$PATH"
+          export QMAKE=/usr/lib/qt6/bin/qmake
+          export EXTRA_QT_PLUGINS="svg,imageformats,platforms,iconengines"
+
+          linuxdeploy --appdir AppDir \
+            -e build/openwordpad \
+            -d openwordpad.desktop \
+            -i resources/icons/app_icon.png \
+            --plugin qt \
+            --output appimage
+
+          # Rename AppImage and create tar.gz bundle
+          mv OpenWordPad*.AppImage OpenWordPad-Linux-x86_64.AppImage
+          chmod +x OpenWordPad-Linux-x86_64.AppImage
+          tar -czvf OpenWordPad-Linux-x86_64.tar.gz OpenWordPad-Linux-x86_64.AppImage openwordpad.desktop README.md LICENSE
 
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@v4
         with:
           name: OpenWordPad-Linux-x86_64
-          path: OpenWordPad-Linux-x86_64.tar.gz
+          path: |
+            OpenWordPad-Linux-x86_64.AppImage
+            OpenWordPad-Linux-x86_64.tar.gz
 
   publish-release:
     name: Publish GitHub Release
@@ -149,4 +173,5 @@ jobs:
           generate_release_notes: true
           files: |
             OpenWordPad-Windows-x64.zip
+            OpenWordPad-Linux-x86_64.AppImage
             OpenWordPad-Linux-x86_64.tar.gz

@@ -18,7 +18,8 @@ A faithful, full-featured, high-performance recreation of **Microsoft WordPad** 
 Puoi scaricare l'ultima versione precompilata direttamente dalla sezione **[Releases](https://github.com/leocor/openwordpad/releases)**:
 
 * 🪟 **[Windows x64 (.zip)](https://github.com/leocor/openwordpad/releases/latest)**: Pacchetto portabile autonomo (non richiede installazione, include tutte le DLL di runtime).
-* 🐧 **[Linux x86_64 (.tar.gz)](https://github.com/leocor/openwordpad/releases/latest)**: Eseguibile pronto per qualsiasi distribuzione Linux (CachyOS, Arch, Ubuntu, Debian, Fedora, Mint).
+* 🐧 **[Linux x86_64 (.AppImage)](https://github.com/leocor/openwordpad/releases/latest)**: Pacchetto portabile autonomo standalone (include tutte le librerie e plugin Qt6, funziona con doppio click su qualsiasi distribuzione Linux senza dipendenze).
+* 📦 **[Linux x86_64 Bundle (.tar.gz)](https://github.com/leocor/openwordpad/releases/latest)**: Archivio compresso contenente AppImage, file .desktop e documentazione.
 
 ---
 
