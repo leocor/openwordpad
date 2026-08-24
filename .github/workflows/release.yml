@@ -118,15 +118,7 @@ jobs:
           cp -r /usr/lib/x86_64-linux-gnu/qt6/plugins/* AppDir/usr/plugins/ 2>/dev/null || true
 
           # 4. Create AppRun script
-          cat << 'EOF' > AppDir/AppRun
-#!/bin/bash
-HERE="$(dirname "$(readlink -f "${0}")")"
-export PATH="${HERE}/usr/bin:${PATH}"
-export LD_LIBRARY_PATH="${HERE}/usr/lib:${LD_LIBRARY_PATH}"
-export QT_PLUGIN_PATH="${HERE}/usr/plugins"
-export QML2_IMPORT_PATH="${HERE}/usr/qml"
-exec "${HERE}/usr/bin/openwordpad" "$@"
-EOF
+          printf '#!/bin/bash\nHERE="$(dirname "$(readlink -f "${0}")")"\nexport PATH="${HERE}/usr/bin:${PATH}"\nexport LD_LIBRARY_PATH="${HERE}/usr/lib:${LD_LIBRARY_PATH}"\nexport QT_PLUGIN_PATH="${HERE}/usr/plugins"\nexec "${HERE}/usr/bin/openwordpad" "$@"\n' > AppDir/AppRun
           chmod +x AppDir/AppRun
 
           # 5. Download appimagetool and generate standalone AppImage
