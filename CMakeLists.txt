@@ -252,3 +252,22 @@ target_include_directories(test_translations PRIVATE
 )
 
 add_test(NAME TranslationTests COMMAND test_translations)
+
+# ==========================================
+# CPack Packaging Configuration
+# ==========================================
+set(CPACK_PACKAGE_NAME "OpenWordPad")
+set(CPACK_PACKAGE_VENDOR "Leonardo Corato")
+set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenWordPad - Open Source WordPad recreation in Qt6")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "OpenWordPad")
+
+if(WIN32)
+    set(CPACK_GENERATOR "WIX;ZIP")
+    set(CPACK_WIX_UPGRADE_GUID "D98A76B2-3C4E-481A-B982-581F78A690B4")
+    set(CPACK_WIX_PRODUCT_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/icons/app_icon.ico")
+    set(CPACK_WIX_PROGRAM_MENU_FOLDER "OpenWordPad")
+    install(TARGETS openwordpad RUNTIME DESTINATION .)
+endif()
+
+include(CPack)
