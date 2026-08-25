@@ -4,53 +4,51 @@ param(
     [string]$Version = "1.3.3.0"
 )
 
-Write-Host "=== Starting WiX MSI Build ==="
+Write-Host "=== Starting Windows Installer Build ==="
 Write-Host "Current Directory: $(Get-Location)"
 Write-Host "DistDir: $DistDir"
 
-# Locate WiX v3 Toolset
+# 1. Build MSI with WiX if available
 $wixBin = ""
-if ($env:WIX -and (Test-Path "$env:WIX\bin\heat.exe")) {
+if ($env:WIX -and (Test-Path "$env:WIX\bin\candle.exe")) {
     $wixBin = "$env:WIX\bin"
-} elseif (Test-Path "C:\Program Files (x86)\WiX Toolset v3.11\bin\heat.exe") {
+} elseif (Test-Path "C:\Program Files (x86)\WiX Toolset v3.11\bin\candle.exe") {
     $wixBin = "C:\Program Files (x86)\WiX Toolset v3.11\bin"
 }
 
 if ($wixBin -ne "") {
     Write-Host "WiX Toolset v3 found at: $wixBin"
     $env:PATH = "$wixBin;$env:PATH"
+    $wixUI = "$wixBin\WixUIExtension.dll"
 
-    Write-Host "[1/3] Harvesting files with heat..."
-    & "$wixBin\heat.exe" dir $DistDir -cg AppFiles -dr INSTALLFOLDER -scom -sreg -srd -ag -sfrag -var var.DistDir -out BundleFiles.wxs
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "heat.exe failed with exit code $LASTEXITCODE"
-        exit 1
-    }
+    try {
+        Write-Host "[1/3] Running heat.exe..."
+        & "$wixBin\heat.exe" dir $DistDir -cg AppFiles -dr INSTALLFOLDER -scom -sreg -srd -ag -sfrag -var var.DistDir -out BundleFiles.wxs
+        (Get-Content BundleFiles.wxs) -replace '<Component ', '<Component Win64="yes" ' | Set-Content BundleFiles.wxs
 
-    # Ensure all components have Win64='yes'
-    (Get-Content BundleFiles.wxs) -replace '<Component ', '<Component Win64="yes" ' | Set-Content BundleFiles.wxs
+        Write-Host "[2/3] Running candle.exe..."
+        & "$wixBin\candle.exe" -arch x64 "-dDistDir=$DistDir" -ext "$wixUI" installer\windows\OpenWordPad.wxs BundleFiles.wxs
 
-    Write-Host "[2/3] Compiling WiX sources with candle..."
-    & "$wixBin\candle.exe" -arch x64 "-dDistDir=$DistDir" -ext WixUIExtension installer\windows\OpenWordPad.wxs BundleFiles.wxs
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "candle.exe failed with exit code $LASTEXITCODE"
-        exit 1
-    }
-
-    Write-Host "[3/3] Linking MSI with light..."
-    & "$wixBin\light.exe" -ext WixUIExtension -sval -out $OutMsi OpenWordPad.wixobj BundleFiles.wixobj
-    if ($LASTEXITCODE -ne 0) {
-        Write-Error "light.exe failed with exit code $LASTEXITCODE"
-        exit 1
-    }
-
-    if (Test-Path $OutMsi) {
-        Write-Host "=== MSI Build Successful! ==="
-        Write-Host "MSI: $OutMsi ($((Get-Item $OutMsi).Length) bytes)"
-        exit 0
+        Write-Host "[3/3] Running light.exe..."
+        & "$wixBin\light.exe" -ext "$wixUI" -sval -b . -out $OutMsi OpenWordPad.wixobj BundleFiles.wixobj
+        
+        if (Test-Path $OutMsi) {
+            Write-Host "MSI generated successfully: $OutMsi ($((Get-Item $OutMsi).Length) bytes)"
+        }
+    } catch {
+        Write-Warning "WiX build failed: $_"
     }
 }
 
-Write-Host "Trying CPack fallback for MSI..."
-cpack -G WIX -B cpack_out
-Get-ChildItem -Path cpack_out -Filter "*.msi" | Copy-Item -Destination $OutMsi
+# 2. Build Setup.exe with Inno Setup
+$iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+if (Test-Path $iscc) {
+    Write-Host "Compiling Inno Setup installer..."
+    & $iscc installer\windows\OpenWordPad.iss
+    if (Test-Path "installer\windows\OpenWordPad-Windows-x64-Setup.exe") {
+        Move-Item "installer\windows\OpenWordPad-Windows-x64-Setup.exe" "OpenWordPad-Windows-x64-Setup.exe" -Force
+        Write-Host "EXE Installer generated successfully: OpenWordPad-Windows-x64-Setup.exe"
+    }
+}
+
+Write-Host "=== Installer Build Step Finished ==="

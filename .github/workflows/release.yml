@@ -86,6 +86,8 @@ jobs:
           path: |
             OpenWordPad-Windows-x64.zip
             OpenWordPad-Windows-x64-Setup.msi
+            OpenWordPad-Windows-x64-Setup.exe
+          if-no-files-found: ignore
 
   build-linux:
     name: Build Linux x86_64
@@ -187,6 +189,7 @@ jobs:
           generate_release_notes: true
           files: |
             OpenWordPad-Windows-x64-Setup.msi
+            OpenWordPad-Windows-x64-Setup.exe
             OpenWordPad-Windows-x64.zip
             OpenWordPad-Linux-x86_64.AppImage
             OpenWordPad-Linux-x86_64.tar.gz
