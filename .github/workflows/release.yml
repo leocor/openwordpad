@@ -28,33 +28,18 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
       - name: Install Qt 6
-        shell: pwsh
-        run: |
-          pip install aqtinstall
-          $installed = $false
-          for ($i = 1; $i -le 3; $i++) {
-            Write-Host "Attempt $i: Installing Qt 6.7.2 via aqt..."
-            python -m aqt install-qt windows desktop 6.7.2 win64_msvc2019_64 -m qtimageformats -O C:\Qt
-            if (Test-Path "C:\Qt\6.7.2\msvc2019_64\bin\qmake.exe") {
-              $installed = $true
-              break
-            }
-            Start-Sleep -Seconds 5
-          }
-          if (-not $installed) {
-            Write-Error "Failed to install Qt 6.7.2 after 3 attempts."
-          }
-          echo "QT_ROOT=C:/Qt/6.7.2/msvc2019_64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          echo "C:\Qt\6.7.2\msvc2019_64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '6.7.2'
+          arch: 'win64_msvc2019_64'
+          modules: 'qtimageformats'
+          target: 'desktop'
 
       - name: Configure CMake
         shell: pwsh
         run: |
-          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="C:/Qt/6.7.2/msvc2019_64"
+          cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$env:Qt6_DIR"
 
       - name: Build Project
         shell: pwsh
@@ -66,8 +51,6 @@ jobs:
         env:
           QT_QPA_PLATFORM: offscreen
         run: |
-          $env:PATH = "C:\Qt\6.7.2\msvc2019_64\bin;$env:PATH"
-          $env:QT_PLUGIN_PATH = "C:\Qt\6.7.2\msvc2019_64\plugins"
           ctest --test-dir build --output-on-failure -C Release
 
       - name: Package Windows Binary & MSI Installer
@@ -75,7 +58,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path dist
           Copy-Item build\openwordpad.exe dist\
-          & "C:\Qt\6.7.2\msvc2019_64\bin\windeployqt.exe" --release --compiler-runtime --no-translations dist\openwordpad.exe
+          windeployqt --release --compiler-runtime --no-translations dist\openwordpad.exe
           
           # 1. Create portable .zip
           Compress-Archive -Path dist\* -DestinationPath OpenWordPad-Windows-x64.zip
