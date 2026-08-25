@@ -69,23 +69,7 @@ jobs:
           Compress-Archive -Path dist\* -DestinationPath OpenWordPad-Windows-x64.zip
 
           # 2. Build .msi using WiX Toolset
-          $wixPath = "C:\Program Files (x86)\WiX Toolset v3.11\bin"
-          if (Test-Path "$wixPath\heat.exe") {
-              $env:PATH = "$wixPath;$env:PATH"
-              
-              # Harvest all staged files into AppFiles component group
-              heat dir dist -cg AppFiles -dr INSTALLFOLDER -scom -sreg -srd -var var.DistDir -gg -out BundleFiles.wxs
-              
-              # Compile WiX sources
-              candle -arch x64 -dDistDir=dist -ext WixUIExtension installer\windows\OpenWordPad.wxs BundleFiles.wxs
-              
-              # Link into MSI
-              light -ext WixUIExtension -sval -out OpenWordPad-Windows-x64-Setup.msi OpenWordPad.wixobj BundleFiles.wixobj
-          } else {
-              Write-Host "WiX Toolset v3 not found, installing WiX CLI..."
-              dotnet tool install --global wix --version 4.0.1
-              wix build installer\windows\OpenWordPad.wxs -d DistDir=dist -o OpenWordPad-Windows-x64-Setup.msi
-          }
+          & powershell -ExecutionPolicy Bypass -File scripts\build_msi.ps1 -DistDir dist -OutMsi OpenWordPad-Windows-x64-Setup.msi
 
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
