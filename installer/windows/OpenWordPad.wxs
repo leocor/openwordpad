@@ -18,7 +18,7 @@
 
     <MediaTemplate EmbedCab="yes" />
 
-    <Icon Id="AppIcon" SourceFile="resources\icons\app_icon.ico" />
+    <Icon Id="AppIcon" SourceFile="resources/icons/app_icon.ico" />
     <Property Id="ARPPRODUCTICON" Value="AppIcon" />
     <Property Id="ARPHELPLINK" Value="https://github.com/leocor/openwordpad" />
     <Property Id="ARPURLINFOABOUT" Value="https://github.com/leocor/openwordpad" />
@@ -65,7 +65,7 @@
     </Feature>
 
     <UIRef Id="WixUI_Minimal" />
-    <WixVariable Id="WixUILicenseRtf" SourceFile="installer\windows\License.rtf" />
+    <WixVariable Id="WixUILicenseRtf" SourceFile="installer/windows/License.rtf" />
 
   </Product>
 </Wix>
