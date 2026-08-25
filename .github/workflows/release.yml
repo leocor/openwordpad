@@ -58,13 +58,13 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path dist
           Copy-Item build\openwordpad.exe dist\
-          windeployqt --release --compiler-runtime --no-translations dist\openwordpad.exe
+          & "$env:QT_ROOT\bin\windeployqt.exe" --release --compiler-runtime --no-translations dist\openwordpad.exe
           
           # 1. Create portable .zip
           Compress-Archive -Path dist\* -DestinationPath OpenWordPad-Windows-x64.zip
 
           # 2. Build .msi using WiX Toolset
-          & powershell -ExecutionPolicy Bypass -File scripts\build_msi.ps1 -DistDir dist -OutMsi OpenWordPad-Windows-x64-Setup.msi
+          pwsh -ExecutionPolicy Bypass -File scripts\build_msi.ps1 -DistDir dist -OutMsi OpenWordPad-Windows-x64-Setup.msi
 
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
