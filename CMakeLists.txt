@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(OpenWordPad VERSION 1.3.2 LANGUAGES C CXX)
+project(OpenWordPad VERSION 1.3.3 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -65,6 +65,10 @@ set(SOURCES
     src/ui/dialogs/PaintDrawingDialog.cpp
     resources/resources.qrc
 )
+
+if(WIN32)
+    list(APPEND SOURCES resources/app_icon.rc)
+endif()
 
 add_executable(openwordpad WIN32 ${SOURCES})
 

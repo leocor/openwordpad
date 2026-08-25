@@ -45,6 +45,15 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
+### [2026-08-25] - Version 1.3.3 - Windows MSI Installer Package & WiX Integration
+- [x] **Windows MSI Installer (`.msi`) Support**:
+  - Integrated WiX Toolset pipeline in GitHub Actions release workflow.
+  - Generates `OpenWordPad-Windows-x64-Setup.msi` installing to `C:\Program Files\OpenWordPad\`.
+  - Automatically creates Start Menu and Desktop shortcuts with custom multi-resolution `.ico` icon.
+  - Registers publisher ("Leonardo Corato"), version, and clean uninstallation in Windows Control Panel / Settings.
+- [x] **100% CTest Suite Validation**:
+  - All 5 test suites passed 100%.
+
 ### [2026-08-24] - Version 1.3.2 - Translation Context Resolution for Namespaced Qt Classes
 - [x] **Namespaced MOC Translation Context Fix (`OpenWordPad::RibbonBar`)**:
   - Resolved MOC context name mismatch where `RibbonBar` and child widgets generated `OpenWordPad::RibbonBar` context.

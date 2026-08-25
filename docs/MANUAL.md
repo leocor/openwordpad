@@ -2,7 +2,7 @@
 
 **Author**: Leonardo Corato  
 **License**: GNU General Public License v2.0 (GPLv2)  
-**Version**: 1.3.2  
+**Version**: 1.3.3  
 
 ---
 

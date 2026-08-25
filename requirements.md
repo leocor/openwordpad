@@ -3,7 +3,7 @@
 **Product Name**: OpenWordPad  
 **Author**: Leonardo Corato  
 **License**: GNU General Public License v2.0 (GPLv2)  
-**Version**: 1.3.2  
+**Version**: 1.3.3  
 **Target Framework**: Qt 6 (Qt 6.5+)  
 **Language**: C++20  
 **Target Platforms**: Linux (CachyOS / Arch / Ubuntu / Fedora), Windows (10/11), macOS (12+)  
