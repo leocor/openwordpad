@@ -3,29 +3,51 @@
 [![License: GPL v2](https://img.shields.io/badge/License-GPLv2-blue.svg)](LICENSE)
 [![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
 [![Qt6](https://img.shields.io/badge/Qt-6.5+-green.svg)](https://www.qt.io/)
-[![Build Windows x64](https://github.com/leocor/openwordpad/actions/workflows/build-windows.yml/badge.svg)](https://github.com/leocor/openwordpad/actions/workflows/build-windows.yml)
+[![Build Multiplatform](https://github.com/leocor/openwordpad/actions/workflows/release.yml/badge.svg)](https://github.com/leocor/openwordpad/actions/workflows/release.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/leocor/openwordpad?color=success)](https://github.com/leocor/openwordpad/releases)
 
-A faithful, full-featured, high-performance recreation of **Microsoft WordPad** built in modern C++ (C++20) and Qt6. OpenWordPad brings back the simplicity, speed, and clean interface of classic Windows document editing across Linux, Windows, and macOS.
+A faithful, high-performance, clean-room recreation of **Microsoft WordPad** built in modern C++ (C++20) and Qt6. OpenWordPad brings back the simplicity, speed, and clean interface of classic Windows document editing across **Linux**, **Windows**, and **macOS**.
 
 **Author**: Leonardo Corato  
 **License**: GNU General Public License v2.0 (GPLv2)  
 
 ---
 
-## 📥 Download Pronti all'uso (Releases)
+## 📸 Screenshots
 
-Puoi scaricare l'ultima versione precompilata direttamente dalla sezione **[Releases](https://github.com/leocor/openwordpad/releases)**:
+### Main Editor & Home Ribbon
+![OpenWordPad Main Editor](docs/screenshots/screenshot_main.png)
 
-* 🪟 **[Windows x64 (.zip)](https://github.com/leocor/openwordpad/releases/latest)**: Pacchetto portabile autonomo (non richiede installazione, include tutte le DLL di runtime).
-* 🐧 **[Linux x86_64 (.AppImage)](https://github.com/leocor/openwordpad/releases/latest)**: Pacchetto portabile autonomo standalone (include tutte le librerie e plugin Qt6, funziona con doppio click su qualsiasi distribuzione Linux senza dipendenze).
-* 📦 **[Linux x86_64 Bundle (.tar.gz)](https://github.com/leocor/openwordpad/releases/latest)**: Archivio compresso contenente AppImage, file .desktop e documentazione.
+### View Ribbon & Customization
+![OpenWordPad View Ribbon](docs/screenshots/screenshot_view.png)
+
+<p align="center">
+  <img src="docs/screenshots/screenshot_about.png" width="48%" alt="About OpenWordPad Dialog" />
+  <img src="docs/screenshots/screenshot_page_setup.png" width="48%" alt="Page Setup Dialog" />
+</p>
+
+---
+
+## 📥 Ready-to-use Downloads (Releases)
+
+Download the latest version directly from the **[Releases Page](https://github.com/leocor/openwordpad/releases/latest)**:
+
+* 🍏 **macOS (Apple Silicon M1 / M2 / M3 / M4)**:
+  * **[OpenWordPad-macOS-AppleSilicon.dmg](https://github.com/leocor/openwordpad/releases/latest)** (Native Disk Image with Drag & Drop to Applications)
+  * **[OpenWordPad-macOS-AppleSilicon.zip](https://github.com/leocor/openwordpad/releases/latest)** (Portable `.app` bundle)
+* 🪟 **Windows (10 / 11 / Windows Server)**:
+  * **[OpenWordPad-Windows-x64-Setup.exe](https://github.com/leocor/openwordpad/releases/latest)** (Multilingual Setup Wizard with Desktop & Start Menu shortcuts)
+  * **[OpenWordPad-Windows-x64.zip](https://github.com/leocor/openwordpad/releases/latest)** (Portable standalone ZIP archive)
+* 🐧 **Linux (x86_64)**:
+  * **[OpenWordPad-Linux-x86_64.AppImage](https://github.com/leocor/openwordpad/releases/latest)** (Standalone portable AppImage, double-click to run on any distro)
+  * **[OpenWordPad-Linux-x86_64.tar.gz](https://github.com/leocor/openwordpad/releases/latest)** (Compressed tarball with AppImage, metadata, and icons)
 
 ---
 
 ## ✨ Features
 
 - 🎨 **Faithful Ribbon Interface**: Quick Access Toolbar, Blue Application Menu, Home tab, View tab, and interactive status bar.
+- 🌐 **Multilingual Localization**: Complete support for over 20 languages (English, Italian, Spanish, French, German, Portuguese, Russian, Japanese, Chinese, etc.) with automatic OS session language detection.
 - 📐 **Interactive Measurement Ruler**: Draggable Left/Right margins, First Line Indent, Hanging Indent, and dynamic unit switching (Centimeters, Inches, Points, Picas).
 - 📝 **Rich Text Formatting**: Font families, font sizes, bold, italic, underline, strikethrough, subscript, superscript, color palettes, and highlight swatches.
 - 📄 **Paragraph & Layout Tools**: Line spacing (1.0 to 2.0 + 10pt space after), multi-level bullet and numbered lists, alignments, and full Page Setup.
@@ -57,17 +79,19 @@ ninja -C build
 ./build/openwordpad
 ```
 
-### Run Tests
+### Run Test Suite
 ```bash
-./build/test_engine -platform offscreen
+ctest --test-dir build --output-on-failure
 ```
 
 ---
 
-## 📜 Documentation & Requirements
+## 📜 Documentation & Specifications
 - [User Manual](docs/MANUAL.md)
 - [Requirements Specification (requirements.md / requirements.ms)](requirements.md)
 - [Development Log (log.md)](log.md)
+
+---
 
 ## ⚖️ License & Trademark Disclaimer
 

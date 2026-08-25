@@ -18,8 +18,7 @@ find_package(Qt6 REQUIRED COMPONENTS
     Test
 )
 
-set(SOURCES
-    src/main.cpp
+set(COMMON_UI_SOURCES
     src/core/Units.h
     src/core/miniz.h
     src/core/miniz_common.h
@@ -66,6 +65,11 @@ set(SOURCES
     resources/resources.qrc
 )
 
+set(SOURCES
+    src/main.cpp
+    ${COMMON_UI_SOURCES}
+)
+
 if(WIN32)
     list(APPEND SOURCES resources/app_icon.rc)
 elseif(APPLE)
@@ -108,6 +112,24 @@ if(MSVC)
 else()
     target_compile_options(openwordpad PRIVATE -Wall -Wextra -O3)
 endif()
+
+add_executable(generate_screenshots
+    tools/generate_screenshots.cpp
+    ${COMMON_UI_SOURCES}
+)
+target_link_libraries(generate_screenshots PRIVATE
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::PrintSupport
+    Qt6::Svg
+)
+target_include_directories(generate_screenshots PRIVATE
+    src
+    src/core
+    src/ui
+    src/ui/dialogs
+)
 
 add_executable(test_engine
     tests/test_engine.cpp

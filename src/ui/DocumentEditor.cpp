@@ -1,15 +1,14 @@
 #include "DocumentEditor.h"
-#include <QTextBlock>
-#include <QTextList>
-#include <QTextImageFormat>
-#include <QWheelEvent>
 #include <QPainter>
-#include <QFileDialog>
-#include <QFileInfo>
-#include <QBuffer>
-#include <QUrl>
 #include <QScrollBar>
-#include <QDebug>
+#include <QPageLayout>
+#include <QDateTime>
+#include <QFileInfo>
+#include <QFileDialog>
+#include <QImageReader>
+#include <QTextFrame>
+#include <QAbstractTextDocumentLayout>
+#include <cmath>
 
 namespace OpenWordPad {
 
@@ -17,16 +16,19 @@ DocumentEditor::DocumentEditor(QWidget *parent)
     : QTextEdit(parent)
 {
     setAcceptRichText(true);
-    setTabStopDistance(36.0); // 0.5 inch tab stop default
-
-    // Set classic WordPad soft blue canvas background
-    setStyleSheet(
-        "QTextEdit { background-color: #d8e5f2; border: none; }"
-    );
-    viewport()->setStyleSheet("background-color: #d8e5f2;");
+    setTabStopDistance(40.0); // Standard tab stop
+    viewport()->setCursor(Qt::IBeamCursor);
+    
+    // Set modern Windows WordPad styling
+    setStyleSheet(QStringLiteral(
+        "DocumentEditor { background-color: #d8e5f2; border: none; }"
+        "DocumentEditor QScrollBar:vertical { width: 14px; background: #f0f0f0; }"
+        "DocumentEditor QScrollBar::handle:vertical { background: #cdcdcd; min-height: 20px; border-radius: 2px; }"
+        "DocumentEditor QScrollBar::handle:vertical:hover { background: #a6a6a6; }"
+    ));
 
     QFont defaultFont(QStringLiteral("Calibri"), 11);
-    if (!defaultFont.exactMatch()) {
+    if (!QFontInfo(defaultFont).exactMatch()) {
         defaultFont.setFamily(QStringLiteral("DejaVu Sans"));
     }
     setFont(defaultFont);
@@ -40,14 +42,7 @@ DocumentEditor::DocumentEditor(QWidget *parent)
 
 void DocumentEditor::setWrapMode(WrapMode mode) {
     m_wrapMode = mode;
-    if (m_wrapMode == WrapMode::NoWrap) {
-        setLineWrapMode(QTextEdit::NoWrap);
-    } else if (m_wrapMode == WrapMode::WrapToWindow) {
-        setLineWrapMode(QTextEdit::WidgetWidth);
-    } else if (m_wrapMode == WrapMode::WrapToRuler) {
-        setLineWrapMode(QTextEdit::FixedPixelWidth);
-        updateMargins();
-    }
+    updateMargins();
 }
 
 void DocumentEditor::setZoomFactor(double factor) {
@@ -82,12 +77,25 @@ void DocumentEditor::updateMargins() {
     }
 
     double totalPageWidthPx = pageWidthInches * Units::DPI * m_zoomFactor;
-    int originX = std::max(20, (viewport()->width() - static_cast<int>(totalPageWidthPx)) / 2);
+    int originX = std::max(20, (width() - static_cast<int>(totalPageWidthPx)) / 2);
+    int rightMarginWidth = std::max(20, width() - (originX + static_cast<int>(totalPageWidthPx)));
 
     double printableWidthPx = (pageWidthInches - m_pageSettings.leftMargin - m_pageSettings.rightMargin) * Units::DPI * m_zoomFactor;
-    
+    int leftMarginPx = static_cast<int>(m_pageSettings.leftMargin * Units::DPI * m_zoomFactor);
+    int rightMarginPx = static_cast<int>(m_pageSettings.rightMargin * Units::DPI * m_zoomFactor);
+    int topMarginPx = static_cast<int>(m_pageSettings.topMargin * Units::DPI * m_zoomFactor);
+    int bottomMarginPx = static_cast<int>(m_pageSettings.bottomMargin * Units::DPI * m_zoomFactor);
+
+    // Frame margins inside the white sheet
+    QTextFrameFormat frameFmt = document()->rootFrame()->frameFormat();
+    frameFmt.setLeftMargin(leftMarginPx);
+    frameFmt.setRightMargin(rightMarginPx);
+    frameFmt.setTopMargin(topMarginPx);
+    frameFmt.setBottomMargin(bottomMarginPx);
+    document()->rootFrame()->setFrameFormat(frameFmt);
+
     if (m_wrapMode == WrapMode::WrapToRuler) {
-        setLineWrapColumnOrWidth(static_cast<int>(printableWidthPx));
+        setLineWrapColumnOrWidth(leftMarginPx + static_cast<int>(printableWidthPx));
         setLineWrapMode(QTextEdit::FixedPixelWidth);
     } else if (m_wrapMode == WrapMode::WrapToWindow) {
         setLineWrapMode(QTextEdit::WidgetWidth);
@@ -95,12 +103,11 @@ void DocumentEditor::updateMargins() {
         setLineWrapMode(QTextEdit::NoWrap);
     }
 
-    // Align page margins to ruler and center
-    int leftMarginPx = static_cast<int>(m_pageSettings.leftMargin * Units::DPI * m_zoomFactor);
-    int bottomMarginPx = static_cast<int>(m_pageSettings.bottomMargin * Units::DPI * m_zoomFactor);
+    document()->setDocumentMargin(0);
 
-    document()->setDocumentMargin(originX + leftMarginPx);
-    setViewportMargins(0, 8, 0, bottomMarginPx / 2);
+    // Position the white viewport sheet in the center
+    setViewportMargins(originX, 8, rightMarginWidth, 16);
+    viewport()->setStyleSheet("background-color: #ffffff;");
 }
 
 void DocumentEditor::applyCharFormat(const QTextCharFormat &format) {
@@ -138,21 +145,17 @@ void DocumentEditor::toggleStrikethrough() {
 
 void DocumentEditor::toggleSubscript() {
     QTextCharFormat fmt;
-    if (currentCharFormat().verticalAlignment() == QTextCharFormat::AlignSubScript) {
-        fmt.setVerticalAlignment(QTextCharFormat::AlignNormal);
-    } else {
-        fmt.setVerticalAlignment(QTextCharFormat::AlignSubScript);
-    }
+    fmt.setVerticalAlignment(currentCharFormat().verticalAlignment() == QTextCharFormat::AlignSubScript
+                             ? QTextCharFormat::AlignNormal
+                             : QTextCharFormat::AlignSubScript);
     applyCharFormat(fmt);
 }
 
 void DocumentEditor::toggleSuperscript() {
     QTextCharFormat fmt;
-    if (currentCharFormat().verticalAlignment() == QTextCharFormat::AlignSuperScript) {
-        fmt.setVerticalAlignment(QTextCharFormat::AlignNormal);
-    } else {
-        fmt.setVerticalAlignment(QTextCharFormat::AlignSuperScript);
-    }
+    fmt.setVerticalAlignment(currentCharFormat().verticalAlignment() == QTextCharFormat::AlignSuperScript
+                             ? QTextCharFormat::AlignNormal
+                             : QTextCharFormat::AlignSuperScript);
     applyCharFormat(fmt);
 }
 
@@ -164,26 +167,28 @@ void DocumentEditor::setFontFamily(const QString &family) {
 
 void DocumentEditor::setFontSize(double pt) {
     if (pt <= 0) return;
+    m_baseFontSize = pt;
     QTextCharFormat fmt;
-    fmt.setFontPointSize(pt);
+    fmt.setFontPointSize(pt * m_zoomFactor);
     applyCharFormat(fmt);
 }
 
 void DocumentEditor::growFontSize() {
-    qreal currentSize = fontPointSize();
-    if (currentSize <= 0) currentSize = 11.0;
-    setFontSize(currentSize + 2.0);
+    qreal curSize = fontPointSize();
+    if (curSize <= 0) curSize = m_baseFontSize;
+    setFontSize(curSize + 2.0);
 }
 
 void DocumentEditor::shrinkFontSize() {
-    qreal currentSize = fontPointSize();
-    if (currentSize <= 0) currentSize = 11.0;
-    if (currentSize > 2.0) {
-        setFontSize(currentSize - 2.0);
+    qreal curSize = fontPointSize();
+    if (curSize <= 0) curSize = m_baseFontSize;
+    if (curSize > 2.0) {
+        setFontSize(curSize - 2.0);
     }
 }
 
 void DocumentEditor::setTextColor(const QColor &color) {
+    if (!color.isValid()) return;
     QTextCharFormat fmt;
     fmt.setForeground(color);
     applyCharFormat(fmt);
@@ -191,7 +196,7 @@ void DocumentEditor::setTextColor(const QColor &color) {
 
 void DocumentEditor::setTextHighlightColor(const QColor &color) {
     QTextCharFormat fmt;
-    fmt.setBackground(color);
+    fmt.setBackground(color.isValid() ? QBrush(color) : Qt::NoBrush);
     applyCharFormat(fmt);
 }
 
@@ -200,43 +205,47 @@ void DocumentEditor::setAlignment(Qt::Alignment align) {
 }
 
 void DocumentEditor::increaseIndent() {
-    QTextBlockFormat bf = textCursor().blockFormat();
-    bf.setLeftMargin(bf.leftMargin() + 36.0); // 0.5 in
-    textCursor().setBlockFormat(bf);
+    QTextCursor cursor = textCursor();
+    QTextBlockFormat fmt = cursor.blockFormat();
+    fmt.setIndent(fmt.indent() + 1);
+    cursor.setBlockFormat(fmt);
 }
 
 void DocumentEditor::decreaseIndent() {
-    QTextBlockFormat bf = textCursor().blockFormat();
-    bf.setLeftMargin(std::max(0.0, bf.leftMargin() - 36.0));
-    textCursor().setBlockFormat(bf);
+    QTextCursor cursor = textCursor();
+    QTextBlockFormat fmt = cursor.blockFormat();
+    if (fmt.indent() > 0) {
+        fmt.setIndent(fmt.indent() - 1);
+        cursor.setBlockFormat(fmt);
+    }
 }
 
 void DocumentEditor::setListStyle(QTextListFormat::Style style) {
     QTextCursor cursor = textCursor();
-    cursor.beginEditBlock();
     if (style == QTextListFormat::ListStyleUndefined) {
-        QTextBlockFormat bf = cursor.blockFormat();
-        bf.setObjectIndex(-1);
-        cursor.setBlockFormat(bf);
-    } else {
-        QTextListFormat listFmt;
-        listFmt.setStyle(style);
-        cursor.createList(listFmt);
+        // Remove list formatting
+        QTextBlockFormat blockFmt = cursor.blockFormat();
+        blockFmt.setIndent(0);
+        cursor.setBlockFormat(blockFmt);
+        return;
     }
+
+    cursor.beginEditBlock();
+    QTextListFormat listFmt;
+    listFmt.setStyle(style);
+    cursor.createList(listFmt);
     cursor.endEditBlock();
 }
 
 void DocumentEditor::setLineSpacing(double multiplier, double spaceAfterPt) {
     QTextCursor cursor = textCursor();
     cursor.beginEditBlock();
-    QTextBlockFormat bf = cursor.blockFormat();
-    bf.setLineHeight(multiplier * 100.0, QTextBlockFormat::ProportionalHeight);
-    if (spaceAfterPt > 0) {
-        bf.setBottomMargin(spaceAfterPt * (96.0 / 72.0));
-    } else {
-        bf.setBottomMargin(0);
+    QTextBlockFormat fmt = cursor.blockFormat();
+    fmt.setLineHeight(multiplier * 100.0, QTextBlockFormat::ProportionalHeight);
+    if (spaceAfterPt >= 0) {
+        fmt.setBottomMargin(spaceAfterPt);
     }
-    cursor.setBlockFormat(bf);
+    cursor.setBlockFormat(fmt);
     cursor.endEditBlock();
 }
 
@@ -323,59 +332,7 @@ void DocumentEditor::wheelEvent(QWheelEvent *event) {
 }
 
 void DocumentEditor::paintEvent(QPaintEvent *event) {
-    double pageWidthInches = 8.27; // Default A4
-    if (m_pageSettings.pageSizeId == QPageSize::Letter) pageWidthInches = 8.5;
-    else if (m_pageSettings.pageSizeId == QPageSize::Legal) pageWidthInches = 8.5;
-    else if (m_pageSettings.pageSizeId == QPageSize::A3) pageWidthInches = 11.69;
-    else if (m_pageSettings.pageSizeId == QPageSize::A5) pageWidthInches = 5.83;
-
-    if (m_pageSettings.orientation == QPageLayout::Landscape) {
-        pageWidthInches = 11.69;
-    }
-
-    int totalPageWidthPx = static_cast<int>(pageWidthInches * Units::DPI * m_zoomFactor);
-    int originX = std::max(20, (viewport()->width() - totalPageWidthPx) / 2);
-    int scrollY = verticalScrollBar()->value();
-    int topY = (scrollY == 0) ? 8 : 0;
-
-    // 1. Draw white page background and shadow first
-    {
-        QPainter p(viewport());
-        p.fillRect(viewport()->rect(), Qt::white);
-    }
-
-    // 2. Render Text Document
     QTextEdit::paintEvent(event);
-
-    // 3. Paint over outside margins with blue canvas to guarantee 0 bleeding
-    {
-        QPainter p(viewport());
-        QColor blueCanvas(0xd8, 0xe5, 0xf2);
-
-        // Left canvas
-        p.fillRect(0, 0, originX, viewport()->height(), blueCanvas);
-
-        // Right canvas
-        int rightStartX = originX + totalPageWidthPx;
-        int rightWidth = std::max(0, viewport()->width() - rightStartX);
-        p.fillRect(rightStartX, 0, rightWidth, viewport()->height(), blueCanvas);
-
-        // Top gap when at the very top of document
-        if (topY > 0) {
-            p.fillRect(originX, 0, totalPageWidthPx, topY, blueCanvas);
-        }
-
-        // Draw page borders
-        p.setPen(QColor(0xa0, 0xb6, 0xcc));
-        p.drawLine(originX, topY, originX, viewport()->height());
-        p.drawLine(rightStartX, topY, rightStartX, viewport()->height());
-        if (topY > 0) {
-            p.drawLine(originX, topY, rightStartX, topY);
-        }
-
-        // Subtle drop shadow on right side
-        p.fillRect(rightStartX + 1, topY + 2, 2, viewport()->height(), QColor(0x9a, 0xad, 0xc2, 90));
-    }
 }
 
 } // namespace OpenWordPad
