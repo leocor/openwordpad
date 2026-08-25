@@ -45,6 +45,14 @@
 - [x] Perfectly aligned page sheet rendering with the ruler margin coordinates.
 - [x] Rebuilt application and verified all tests pass with 100% success rate.
 
+### [2026-08-25] - Version 1.4.0 - Native macOS Apple Silicon (M1/M2/M3/M4) Release
+- [x] **macOS Apple Silicon (ARM64) Support**:
+  - Configured native macOS App Bundle (`OpenWordPad.app`) with custom Retina Apple ICNS icon set.
+  - Automated `macdeployqt` standalone bundling and drag-and-drop `.dmg` installer generation.
+  - Integrated CI/CD job on GitHub Actions `macos-14` (Apple Silicon M1/M2/M3/M4 runner).
+- [x] **100% CTest Suite Validation**:
+  - All 5 test suites passed 100%.
+
 ### [2026-08-25] - Version 1.3.3 - Windows MSI Installer Package & WiX Integration
 - [x] **Windows MSI Installer (`.msi`) Support**:
   - Integrated WiX Toolset pipeline in GitHub Actions release workflow.

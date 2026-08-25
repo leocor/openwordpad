@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(OpenWordPad VERSION 1.3.3 LANGUAGES C CXX)
+project(OpenWordPad VERSION 1.4.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -68,9 +68,25 @@ set(SOURCES
 
 if(WIN32)
     list(APPEND SOURCES resources/app_icon.rc)
+elseif(APPLE)
+    set_source_files_properties(resources/icons/app_icon.icns PROPERTIES
+        MACOSX_PACKAGE_LOCATION "Resources"
+    )
+    list(APPEND SOURCES resources/icons/app_icon.icns)
 endif()
 
-add_executable(openwordpad WIN32 ${SOURCES})
+add_executable(openwordpad WIN32 MACOSX_BUNDLE ${SOURCES})
+
+if(APPLE)
+    set_target_properties(openwordpad PROPERTIES
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_BUNDLE_NAME "OpenWordPad"
+        MACOSX_BUNDLE_GUI_IDENTIFIER "org.openwordpad.OpenWordPad"
+        MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION}"
+        MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION}"
+        MACOSX_BUNDLE_ICON_FILE "app_icon.icns"
+    )
+endif()
 
 target_link_libraries(openwordpad PRIVATE
     Qt6::Core
@@ -268,6 +284,11 @@ if(WIN32)
     set(CPACK_WIX_PRODUCT_ICON "${CMAKE_CURRENT_SOURCE_DIR}/resources/icons/app_icon.ico")
     set(CPACK_WIX_PROGRAM_MENU_FOLDER "OpenWordPad")
     install(TARGETS openwordpad RUNTIME DESTINATION .)
+elseif(APPLE)
+    set(CPACK_GENERATOR "DragNDrop;ZIP")
+    set(CPACK_DMG_VOLUME_NAME "OpenWordPad")
+    set(CPACK_DMG_FORMAT "UDZO")
+    install(TARGETS openwordpad BUNDLE DESTINATION .)
 endif()
 
 include(CPack)
