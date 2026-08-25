@@ -34,7 +34,7 @@
     </Directory>
 
     <DirectoryRef Id="ApplicationProgramsFolder">
-      <Component Id="ApplicationShortcut" Guid="{7B9C12A3-4D5E-6F7A-8B9C-0D1E2F3A4B5C}">
+      <Component Id="ApplicationShortcut" Guid="{7B9C12A3-4D5E-6F7A-8B9C-0D1E2F3A4B5C}" Win64="yes">
         <Shortcut Id="ApplicationStartMenuShortcut"
                   Name="OpenWordPad"
                   Description="Open Source WordPad recreation in Qt6"
@@ -47,7 +47,7 @@
     </DirectoryRef>
 
     <DirectoryRef Id="DesktopFolder">
-      <Component Id="DesktopShortcut" Guid="{8C0D23B4-5E6F-7A8B-9C0D-1E2F3A4B5C6D}">
+      <Component Id="DesktopShortcut" Guid="{8C0D23B4-5E6F-7A8B-9C0D-1E2F3A4B5C6D}" Win64="yes">
         <Shortcut Id="ApplicationDesktopShortcut"
                   Name="OpenWordPad"
                   Description="Open Source WordPad recreation in Qt6"

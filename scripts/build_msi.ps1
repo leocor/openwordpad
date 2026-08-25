@@ -26,6 +26,9 @@ if ($wix3Bin -ne "") {
     & "$wix3Bin\heat.exe" dir $DistDir -cg AppFiles -dr INSTALLFOLDER -scom -sreg -srd -var var.DistDir -gg -out BundleFiles.wxs
     if ($LASTEXITCODE -ne 0) { throw "heat failed with exit code $LASTEXITCODE" }
 
+    # Ensure all harvested components are 64-bit
+    (Get-Content BundleFiles.wxs) -replace '<Component ', '<Component Win64="yes" ' | Set-Content BundleFiles.wxs
+
     Write-Host "2. Compiling with candle..."
     & "$wix3Bin\candle.exe" -arch x64 "-dDistDir=$DistDir" -ext "$wixUI" installer\windows\OpenWordPad.wxs BundleFiles.wxs
     if ($LASTEXITCODE -ne 0) { throw "candle failed with exit code $LASTEXITCODE" }
